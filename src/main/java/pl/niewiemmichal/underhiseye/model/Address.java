@@ -34,7 +34,7 @@ public class Address {
     @NotBlank
     @Column(nullable = false, length = 50)
     @Size(max = 50)
-    private String house_number;
+    private String houseNumber;
 
     @Column(length = 50)
     @Size(max = 50)
