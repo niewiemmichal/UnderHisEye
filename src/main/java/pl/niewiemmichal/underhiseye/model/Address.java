@@ -1,16 +1,16 @@
 package pl.niewiemmichal.underhiseye.model;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
+@Data
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
@@ -19,16 +19,24 @@ public class Address {
     private Long id;
 
     @NonNull
-    @Column(nullable = false)
+    @NotBlank
+    @Column(nullable = false, length = 120)
+    @Size(max = 120)
     private String city;
 
     @NonNull
-    @Column(nullable = false)
+    @NotBlank
+    @Column(nullable = false, length = 120)
+    @Size(max = 120)
     private String street;
 
     @NonNull
-    @Column(nullable = false)
+    @NotBlank
+    @Column(nullable = false, length = 50)
+    @Size(max = 50)
     private String house_number;
 
+    @Column(length = 50)
+    @Size(max = 50)
     private String apartment;
 }

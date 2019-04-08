@@ -1,14 +1,13 @@
 package pl.niewiemmichal.underhiseye.model;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
+@Data
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LaboratoryExamination {
@@ -16,17 +15,20 @@ public class LaboratoryExamination {
     @Id @GeneratedValue
     private Integer id;
 
-    @Lob
+    @Column(length = 8000)
+    @Size(max = 8000)
     private String note;
 
-    @Lob
+    @Column(length = 8000)
+    @Size(max = 8000)
     private String result;
 
     @NonNull
     @Column(nullable = false)
-    private Integer status;
+    private LaboratoryExamStatus status;
 
-    @Lob
+    @Column(length = 8000)
+    @Size(max = 8000)
     private String supervisorNote;
 
     @NonNull
@@ -34,18 +36,16 @@ public class LaboratoryExamination {
     @Temporal(TemporalType.DATE)
     private Date orderDate;
 
-    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date completionDate;
 
-    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date approvalDate;
 
     @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
-    private PhysicalExamination examination;
+    private Examination examination;
 
     @NonNull
     @JoinColumn(nullable = false)

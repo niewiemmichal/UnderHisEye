@@ -1,14 +1,14 @@
 package pl.niewiemmichal.underhiseye.model;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
+@Data
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Visit {
@@ -16,15 +16,17 @@ public class Visit {
     @Id @GeneratedValue
     private Integer id;
 
-    @Lob
+    @Column(nullable = false, length = 8000)
+    @Size(max = 8000)
     private String description;
 
-    @Lob
+    @Column(nullable = false, length = 8000)
+    @Size(max = 8000)
     private String diagnosis;
 
     @NonNull
     @Column(nullable = false)
-    private Integer status;
+    private VisitStatus status;
 
     @NonNull
     @Column(nullable = false)
