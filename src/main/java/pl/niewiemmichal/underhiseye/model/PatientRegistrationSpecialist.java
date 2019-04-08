@@ -13,22 +13,17 @@ import javax.persistence.Id;
 @Entity
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Address {
+public class PatientRegistrationSpecialist {
 
     @Id @GeneratedValue
-    private Long id;
+    private Integer id;
 
     @NonNull
     @Column(nullable = false)
-    private String city;
+    private String name;
 
     @NonNull
     @Column(nullable = false)
-    private String street;
+    private String surname;
 
-    @NonNull
-    @Column(nullable = false)
-    private String house_number;
-
-    private String apartment;
 }

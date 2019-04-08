@@ -7,28 +7,19 @@ import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Address {
+public class Examination {
 
-    @Id @GeneratedValue
-    private Long id;
-
-    @NonNull
-    @Column(nullable = false)
-    private String city;
+    @Id
+    @Column(length = 6)
+    private String code;
 
     @NonNull
     @Column(nullable = false)
-    private String street;
+    private String name;
 
-    @NonNull
-    @Column(nullable = false)
-    private String house_number;
-
-    private String apartment;
 }

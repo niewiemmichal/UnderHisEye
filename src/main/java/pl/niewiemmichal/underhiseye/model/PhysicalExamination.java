@@ -10,25 +10,23 @@ import javax.persistence.*;
 @Entity
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Patient {
+public class PhysicalExamination {
 
     @Id @GeneratedValue
-    private Long id;
+    private Integer id;
 
     @NonNull
     @Column(nullable = false)
-    private String name;
-
-    @NonNull
-    @Column(nullable = false)
-    private String surname;
-
-    @NonNull
-    @Column(nullable = false)
-    private String personalIdentityNumber;
+    private String resukt;
 
     @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
-    private Address address;
+    private Examination examination;
+
+    @NonNull
+    @JoinColumn(nullable = false)
+    @ManyToOne
+    private Visit visit;
+
 }
