@@ -1,0 +1,34 @@
+package pl.niewiemmichal.underhiseye.web.endpoints;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
+import pl.niewiemmichal.underhiseye.model.Examination;
+import pl.niewiemmichal.underhiseye.repository.ExaminationRepository;
+
+import java.util.List;
+
+@Controller
+@RequestMapping ("examinations")
+@ResponseBody
+public class ExaminationEndpoint {
+
+    private final ExaminationRepository examinationRepository;
+
+    ExaminationEndpoint(ExaminationRepository examinationRepository) {
+        this.examinationRepository = examinationRepository;
+    }
+
+    @GetMapping ("/{code}")
+    public Examination getExamination(@PathVariable String code){
+        return examinationRepository.findById(code).orElseThrow(()
+                -> new ResourceDoesNotExistException("Examination","id",code));
+    }
+
+    @GetMapping
+    public List<Examination> getAllExaminations(){
+        return (List<Examination>) examinationRepository.findAll();
+    }
+
+}
+
