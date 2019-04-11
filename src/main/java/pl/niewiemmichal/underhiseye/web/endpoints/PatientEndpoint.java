@@ -23,7 +23,7 @@ public class PatientEndpoint {
     @GetMapping ("/{id}")
     public Patient getPatient(@PathVariable Long id){
         return patientRepository.findById(id).orElseThrow(()
-                -> new ResourceDoesNotExistException("Address","id",id.toString()));
+                -> new ResourceDoesNotExistException("Patient","id",id.toString()));
     }
 
     @GetMapping
@@ -32,7 +32,7 @@ public class PatientEndpoint {
     }
 
     @PostMapping
-    public Patient addPatients(@RequestBody Patient newPatient){
+    public Patient addPatient(@RequestBody Patient newPatient){
         return patientRepository.save(newPatient);
     }
 
