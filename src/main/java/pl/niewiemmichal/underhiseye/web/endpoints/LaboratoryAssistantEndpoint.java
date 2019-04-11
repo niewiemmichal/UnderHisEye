@@ -9,7 +9,7 @@ import pl.niewiemmichal.underhiseye.repository.LaboratoryAssistantRepository;
 import java.util.List;
 
 @Controller
-@RequestMapping ("laboratoryassistants")
+@RequestMapping ("/laboratoryassistants")
 @ResponseBody
 public class LaboratoryAssistantEndpoint {
 

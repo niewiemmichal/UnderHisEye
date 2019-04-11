@@ -9,7 +9,7 @@ import pl.niewiemmichal.underhiseye.repository.AddressRepository;
 import java.util.List;
 
 @Controller
-@RequestMapping ("addresses")
+@RequestMapping ("/addresses")
 @ResponseBody
 public class AddressEndpoint {
 

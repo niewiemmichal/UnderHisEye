@@ -10,7 +10,7 @@ import pl.niewiemmichal.underhiseye.repository.PatientRepository;
 import java.util.List;
 
 @Controller
-@RequestMapping ("patients")
+@RequestMapping ("/patients")
 @ResponseBody
 public class PatientEndpoint {
 

@@ -9,7 +9,7 @@ import pl.niewiemmichal.underhiseye.repository.ExaminationRepository;
 import java.util.List;
 
 @Controller
-@RequestMapping ("examinations")
+@RequestMapping ("/examinations")
 @ResponseBody
 public class ExaminationEndpoint {
 
