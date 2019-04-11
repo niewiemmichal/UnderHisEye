@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 public class LaboratoryAssistant {
 
     @Id @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @NonNull
     @NotEmpty

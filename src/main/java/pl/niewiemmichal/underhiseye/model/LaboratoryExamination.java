@@ -1,6 +1,7 @@
 package pl.niewiemmichal.underhiseye.model;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -13,14 +14,16 @@ import java.util.Date;
 public class LaboratoryExamination {
 
     @Id @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @Column(length = 8000)
     @Size(max = 8000)
+    @Type(type="text")
     private String note;
 
     @Column(length = 8000)
     @Size(max = 8000)
+    @Type(type="text")
     private String result;
 
     @NonNull
@@ -29,6 +32,7 @@ public class LaboratoryExamination {
 
     @Column(length = 8000)
     @Size(max = 8000)
+    @Type(type="text")
     private String supervisorNote;
 
     @NonNull

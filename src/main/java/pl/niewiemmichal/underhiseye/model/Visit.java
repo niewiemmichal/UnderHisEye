@@ -3,7 +3,6 @@ package pl.niewiemmichal.underhiseye.model;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -14,7 +13,7 @@ import java.util.Date;
 public class Visit {
 
     @Id @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false, length = 8000)
     @Size(max = 8000)

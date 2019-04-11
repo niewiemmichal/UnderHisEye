@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 public class PatientRegistrationSpecialist {
 
     @Id @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @NonNull
     @NotEmpty
