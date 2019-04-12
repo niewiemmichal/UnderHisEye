@@ -1,6 +1,5 @@
 package pl.niewiemmichal.underhiseye.web.endpoints;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 import pl.niewiemmichal.underhiseye.model.Examination;
@@ -8,9 +7,8 @@ import pl.niewiemmichal.underhiseye.repository.ExaminationRepository;
 
 import java.util.List;
 
-@Controller
 @RequestMapping ("/examinations")
-@ResponseBody
+@RestController
 public class ExaminationEndpoint {
 
     private final ExaminationRepository examinationRepository;

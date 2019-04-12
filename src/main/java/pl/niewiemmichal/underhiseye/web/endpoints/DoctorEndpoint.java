@@ -2,16 +2,14 @@ package pl.niewiemmichal.underhiseye.web.endpoints;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceConflictException;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.model.Doctor;
 import pl.niewiemmichal.underhiseye.repository.DoctorRepository;
 
 import java.util.List;
 
-@Controller
 @RequestMapping("doctors")
-@ResponseBody
+@RestController
 public class DoctorEndpoint {
 
     private final DoctorRepository doctorRepository;

@@ -1,6 +1,5 @@
 package pl.niewiemmichal.underhiseye.web.endpoints;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.commons.exceptions.*;
 import pl.niewiemmichal.underhiseye.model.LaboratoryAssistant;
@@ -8,9 +7,9 @@ import pl.niewiemmichal.underhiseye.repository.LaboratoryAssistantRepository;
 
 import java.util.List;
 
-@Controller
+
 @RequestMapping ("/laboratoryassistants")
-@ResponseBody
+@RestController
 public class LaboratoryAssistantEndpoint {
 
     private final LaboratoryAssistantRepository laboratoryAssistantRepository;

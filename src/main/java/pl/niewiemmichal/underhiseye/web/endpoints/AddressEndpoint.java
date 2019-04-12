@@ -1,6 +1,5 @@
 package pl.niewiemmichal.underhiseye.web.endpoints;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.commons.exceptions.*;
 import pl.niewiemmichal.underhiseye.model.Address;
@@ -8,9 +7,8 @@ import pl.niewiemmichal.underhiseye.repository.AddressRepository;
 
 import java.util.List;
 
-@Controller
 @RequestMapping ("/addresses")
-@ResponseBody
+@RestController
 public class AddressEndpoint {
 
     private final AddressRepository addressRepository;
