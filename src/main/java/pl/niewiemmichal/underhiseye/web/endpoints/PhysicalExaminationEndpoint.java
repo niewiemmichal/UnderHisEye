@@ -35,11 +35,13 @@ public class PhysicalExaminationEndpoint {
     }
 
     @PutMapping("/{id}")
-    public PhysicalExamination updatePhysicalExamination(@RequestBody PhysicalExamination newPhysicalExamination, @PathVariable Long id) {
+    public PhysicalExamination updatePhysicalExamination
+            (@RequestBody PhysicalExamination newPhysicalExamination, @PathVariable Long id) {
         if(!physicalExaminationRepository.findById(id).isPresent())
             throw new ResourceDoesNotExistException("PhysicalExamination", "id", id.toString());
         else if(newPhysicalExamination.getId() != null && !(id.equals(newPhysicalExamination.getId())))
-            throw new ResourceConflictException("PhysicalExamination", "id", id.toString(), newPhysicalExamination.getId().toString());
+            throw new ResourceConflictException("PhysicalExamination", "id", id.toString(),
+                    newPhysicalExamination.getId().toString());
         else {
             newPhysicalExamination.setId(id);
             return physicalExaminationRepository.save(newPhysicalExamination);

@@ -20,7 +20,8 @@ public class DoctorEndpoint {
 
     @GetMapping("/{id}")
     public Doctor getDoctor(@PathVariable Long id){
-        return doctorRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Doctor","id",id.toString()));
+        return doctorRepository.findById(id).orElseThrow(() ->
+                new ResourceDoesNotExistException("Doctor","id",id.toString()));
     }
 
     @GetMapping

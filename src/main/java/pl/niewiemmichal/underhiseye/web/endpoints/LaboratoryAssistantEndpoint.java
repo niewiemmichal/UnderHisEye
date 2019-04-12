@@ -35,11 +35,13 @@ public class LaboratoryAssistantEndpoint {
     }
 
     @PutMapping("/{id}")
-    public LaboratoryAssistant updateLaboratoryAssistant(@RequestBody LaboratoryAssistant newLaboratoryAssistant, @PathVariable Long id){
+    public LaboratoryAssistant updateLaboratoryAssistant
+            (@RequestBody LaboratoryAssistant newLaboratoryAssistant, @PathVariable Long id){
         if(!laboratoryAssistantRepository.findById(id).isPresent())
             throw new ResourceDoesNotExistException("LaboratoryAssistant", "id", id.toString());
         else if(newLaboratoryAssistant.getId() != null && !(id.equals(newLaboratoryAssistant.getId())))
-            throw new ResourceConflictException("LaboratoryAssistant", "id", id.toString(), newLaboratoryAssistant.getId().toString());
+            throw new ResourceConflictException("LaboratoryAssistant", "id", id.toString(),
+                    newLaboratoryAssistant.getId().toString());
         else {
             newLaboratoryAssistant.setId(id);
             return laboratoryAssistantRepository.save(newLaboratoryAssistant);

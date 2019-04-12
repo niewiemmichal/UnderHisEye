@@ -30,17 +30,20 @@ public class LaboratoryExaminationEndpoint {
     }
 
     @PostMapping
-    public LaboratoryExamination addLaboratoryExamination(@RequestBody LaboratoryExamination newLaboratoryExamination){
+    public LaboratoryExamination addLaboratoryExamination
+            (@RequestBody LaboratoryExamination newLaboratoryExamination){
         return laboratoryExaminationRepository.save(newLaboratoryExamination);
     }
 
     @PutMapping("/{id}")
-    public LaboratoryExamination updateLaboratoryExamination(@RequestBody LaboratoryExamination newLaboratoryExamination,
+    public LaboratoryExamination updateLaboratoryExamination
+            (@RequestBody LaboratoryExamination newLaboratoryExamination,
                                                              @PathVariable Long id) {
         if(!laboratoryExaminationRepository.findById(id).isPresent())
             throw new ResourceDoesNotExistException("LaboratoryExamination", "id", id.toString());
         else if(newLaboratoryExamination.getId() != null && !(id.equals(newLaboratoryExamination.getId())))
-            throw new ResourceConflictException("LaboratoryExamination", "id", id.toString(), newLaboratoryExamination.getId().toString());
+            throw new ResourceConflictException("LaboratoryExamination", "id", id.toString(),
+                    newLaboratoryExamination.getId().toString());
         else {
             newLaboratoryExamination.setId(id);
             return laboratoryExaminationRepository.save(newLaboratoryExamination);
