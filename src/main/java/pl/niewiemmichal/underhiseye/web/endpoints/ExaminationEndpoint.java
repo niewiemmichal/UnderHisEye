@@ -25,7 +25,7 @@ public class ExaminationEndpoint {
 
     @GetMapping
     public List<Examination> getAllExaminations(){
-        return (List<Examination>) examinationRepository.findAll();
+        return examinationRepository.findAll();
     }
 
 }

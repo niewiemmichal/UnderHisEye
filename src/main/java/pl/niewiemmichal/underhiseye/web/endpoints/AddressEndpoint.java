@@ -25,7 +25,7 @@ public class AddressEndpoint {
 
     @GetMapping
     public List<Address> getAllAddresses(){
-        return (List<Address>) addressRepository.findAll();
+        return addressRepository.findAll();
     }
 
     @PostMapping

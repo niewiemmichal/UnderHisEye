@@ -26,7 +26,7 @@ public class LaboratoryExaminationEndpoint {
 
     @GetMapping
     public List<LaboratoryExamination> getAllLaboratoryExaminations(){
-        return (List<LaboratoryExamination>) laboratoryExaminationRepository.findAll();
+        return laboratoryExaminationRepository.findAll();
     }
 
     @PostMapping

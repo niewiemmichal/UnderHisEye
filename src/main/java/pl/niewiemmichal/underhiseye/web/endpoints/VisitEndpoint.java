@@ -26,7 +26,7 @@ public class VisitEndpoint {
 
     @GetMapping
     public List<Visit> getAllVisits(){
-        return (List<Visit>) visitRepository.findAll();
+        return visitRepository.findAll();
     }
 
     @PostMapping

@@ -26,7 +26,7 @@ public class PhysicalExaminationEndpoint {
 
     @GetMapping
     public List<PhysicalExamination> getAllPhysicalExaminations(){
-        return (List<PhysicalExamination>) physicalExaminationRepository.findAll();
+        return physicalExaminationRepository.findAll();
     }
 
     @PostMapping

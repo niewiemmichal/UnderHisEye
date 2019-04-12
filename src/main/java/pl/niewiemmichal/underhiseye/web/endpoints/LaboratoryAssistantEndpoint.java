@@ -26,7 +26,7 @@ public class LaboratoryAssistantEndpoint {
 
     @GetMapping
     public List<LaboratoryAssistant> getAllLaboratoryAssistants(){
-        return (List<LaboratoryAssistant>) laboratoryAssistantRepository.findAll();
+        return laboratoryAssistantRepository.findAll();
     }
 
     @PostMapping

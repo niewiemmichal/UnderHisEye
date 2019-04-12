@@ -26,7 +26,7 @@ public class PatientEndpoint {
 
     @GetMapping
     public List<Patient> getAllPatients(){
-        return (List<Patient>) patientRepository.findAll();
+        return patientRepository.findAll();
     }
 
     @PostMapping
