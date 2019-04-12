@@ -8,7 +8,7 @@ import pl.niewiemmichal.underhiseye.repository.VisitRepository;
 
 import java.util.List;
 
-@RequestMapping ("/visits")
+@RequestMapping ("visits")
 @RestController
 public class VisitEndpoint {
 

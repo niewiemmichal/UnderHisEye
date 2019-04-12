@@ -8,7 +8,7 @@ import pl.niewiemmichal.underhiseye.repository.LaboratoryExaminationRepository;
 
 import java.util.List;
 
-@RequestMapping ("/laboratoryexaminations")
+@RequestMapping ("laboratoryexaminations")
 @RestController
 public class LaboratoryExaminationEndpoint {
 

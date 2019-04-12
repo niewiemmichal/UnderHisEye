@@ -8,7 +8,7 @@ import pl.niewiemmichal.underhiseye.repository.PhysicalExaminationRepository;
 
 import java.util.List;
 
-@RequestMapping ("/physicalexaminations")
+@RequestMapping ("physicalexaminations")
 @RestController
 public class PhysicalExaminationEndpoint {
 
