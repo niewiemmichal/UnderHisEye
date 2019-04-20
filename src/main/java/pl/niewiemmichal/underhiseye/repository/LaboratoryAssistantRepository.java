@@ -1,7 +1,7 @@
 package pl.niewiemmichal.underhiseye.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import pl.niewiemmichal.underhiseye.model.LaboratoryAssistant;
 
-public interface LaboratoryAssistantRepository extends CrudRepository<LaboratoryAssistant, Long> {
+public interface LaboratoryAssistantRepository extends JpaRepository<LaboratoryAssistant, Long> {
 }
