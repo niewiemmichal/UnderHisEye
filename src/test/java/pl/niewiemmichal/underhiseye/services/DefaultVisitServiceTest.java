@@ -1,17 +1,26 @@
 package pl.niewiemmichal.underhiseye.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import pl.niewiemmichal.underhiseye.commons.dto.PhysicalExaminationDto;
+import pl.niewiemmichal.underhiseye.commons.dto.VisitClosureDto;
+import pl.niewiemmichal.underhiseye.commons.dto.VisitRegistrationDto;
+import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
+import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.VisitServiceException;
 import pl.niewiemmichal.underhiseye.entities.*;
 import pl.niewiemmichal.underhiseye.entities.Registrant;
@@ -31,6 +40,9 @@ public class DefaultVisitServiceTest
     private RegistrantRepository registrantRepository;
     @Mock
     private VisitRepository visitRepository;
+    @Mock
+    private ExaminationService examinationService;
+
     @InjectMocks
     private DefaultVisitService visitService;
 
@@ -44,7 +56,10 @@ public class DefaultVisitServiceTest
             new Registrant("Existing", "Registrator");
 
     private static final Visit VISIT =
-            new Visit("description", LocalDate.of(2019, 12, 20), PATIENT, REGISTRANT, DOCTOR);
+            new Visit("description", VisitStatus.REGISTERED, LocalDate.of(2019, 12, 20), PATIENT, REGISTRANT, DOCTOR);
+
+    private static final VisitRegistrationDto VISIT_REGISTRATION_DTO = new VisitRegistrationDto();
+    private static final VisitClosureDto VISIT_CLOSURE_DTO = new VisitClosureDto();
 
     private static Long NOT_EXISTING_DOCTOR_ID = 10L;
     private static Long NOT_EXISTING_PATIENT_ID = 20L;
@@ -67,64 +82,69 @@ public class DefaultVisitServiceTest
 
         VISIT.setId(4L);
         given(visitRepository.findById(VISIT.getId())).willReturn(Optional.of(VISIT));
-
         given(visitRepository.findById(NOT_EXISTING_VISIT_ID)).willReturn(Optional.empty());
-
         given(visitRepository.save(VISIT)).willReturn(VISIT);
+
+        VISIT_REGISTRATION_DTO.setDoctorId(DOCTOR.getId());
+        VISIT_REGISTRATION_DTO.setPatientId(PATIENT.getId());
+        VISIT_REGISTRATION_DTO.setRegistrantId(REGISTRANT.getId());
+        VISIT_REGISTRATION_DTO.setDate(VISIT.getDate());
+
+        VISIT_CLOSURE_DTO.setDescription(VISIT.getDescription());
     }
 
     @Test
     public void shouldRegisterVisit() {
         //when
-        Visit created = visitService.register(VISIT);
+        Visit created = visitService.register(VISIT_REGISTRATION_DTO);
 
         //then
         assertThat(created).isEqualTo(VISIT);
         verify(visitRepository).save(VISIT);
     }
 
-    @Test(expected = VisitServiceException.class)
+    @Test(expected = ResourceDoesNotExistException.class)
     public void shouldNotRegisterVisitIfDoctorDoesNotExist() {
         //given
         VISIT.getDoctor().setId(NOT_EXISTING_DOCTOR_ID);
 
         //when
-        Visit created = visitService.register(VISIT);
+        Visit created = visitService.register(VISIT_REGISTRATION_DTO);
 
         //then
         //expect exception
     }
 
-    @Test(expected = VisitServiceException.class)
+    @Test(expected = ResourceDoesNotExistException.class)
     public void shouldNotRegisterVisitIfRegistrantDoesNotExist() {
         //given
         VISIT.getRegistrationSpecialist().setId(NOT_EXISTING_REGISTRANT_ID);
 
         //when
-        Visit created = visitService.register(VISIT);
+        Visit created = visitService.register(VISIT_REGISTRATION_DTO);
 
         //then
         //expect exception
     }
 
-    @Test(expected = VisitServiceException.class)
+    @Test(expected = ResourceDoesNotExistException.class)
     public void shouldNotRegisterVisitIfPatientDoesNotExist() {
         //given
         VISIT.getPatient().setId(NOT_EXISTING_PATIENT_ID);
 
         //when
-        Visit created = visitService.register(VISIT);
+        Visit created = visitService.register(VISIT_REGISTRATION_DTO);
 
         //then
         //expect exception
     }
 
-    @Test(expected = VisitServiceException.class)
+    @Test(expected = BadRequestException.class)
     public void shouldNotCreateVisitIfPastDate() {
         //given
         VISIT.setDate(LocalDate.of(1997, 9, 25));
 
-        visitService.register(VISIT);
+        visitService.register(VISIT_REGISTRATION_DTO);
 
         //then
         //expect exception
@@ -137,7 +157,7 @@ public class DefaultVisitServiceTest
         given(patientRepository.save(PATIENT)).willReturn(PATIENT);
 
         //when
-        Visit created = visitService.register(VISIT);
+        Visit created = visitService.register(VISIT_REGISTRATION_DTO);
 
         //then
         assertThat(created).isEqualTo(VISIT);
@@ -148,43 +168,33 @@ public class DefaultVisitServiceTest
     @Test
     public void shouldCancelVisit() {
         //given
+        VISIT.setDescription(null);
         //when
-        visitService.cancel(VISIT.getId());
+        visitService.cancel(VISIT.getId(), "reason");
 
         //then
         assertThat(VISIT.getStatus()).isEqualTo(VisitStatus.CANCELED);
+        assertThat(VISIT.getDescription()).isEqualTo("reason");
         verify(visitRepository).save(VISIT);
     }
 
-    @Test(expected = VisitServiceException.class)
-    public void shouldNotCancelIfIdOfNotExistingVisitGiven() {
+    @Test(expected = ResourceDoesNotExistException.class)
+    public void shouldThrowExceptionWhenTryingToCancelNonExistingVisit() {
         //given
         //when
-        visitService.cancel(NOT_EXISTING_VISIT_ID);
+        visitService.cancel(NOT_EXISTING_VISIT_ID, "reason");
 
         //then
         //expect exception
     }
 
-    @Test(expected = VisitServiceException.class)
+    @Test(expected = BadRequestException.class)
     public void shouldNotCancelVisitIfFinished() {
         //given
         VISIT.setStatus(VisitStatus.FINISHED);
 
         //when
-        visitService.cancel(VISIT.getId());
-
-        //then
-        //expect exception
-    }
-
-    @Test(expected = VisitServiceException.class)
-    public void shouldNotCancelVisitIfNoStatus() {
-        //given
-        VISIT.setStatus(null);
-
-        //when
-        visitService.cancel(VISIT.getId());
+        visitService.cancel(VISIT.getId(), "reason");
 
         //then
         //expect exception
@@ -192,7 +202,53 @@ public class DefaultVisitServiceTest
 
     @Test
     public void shouldEndVisit() {
+        //given
+        //when
+        visitService.end(VISIT.getId(), VISIT_CLOSURE_DTO);
+        //then
+        assertThat(VISIT.getStatus()).isEqualTo(VisitStatus.FINISHED);
+        assertThat(VISIT.getDescription()).isEqualTo(VISIT_CLOSURE_DTO.getDescription());
+    }
 
+    @Test
+    public void shouldSetDiagnosisIfPresent() {
+        //given
+        VISIT_CLOSURE_DTO.setDiagnosis("diagnosis");
+        //when
+        visitService.end(VISIT.getId(), VISIT_CLOSURE_DTO);
+        //then
+        assertThat(VISIT.getDiagnosis()).isEqualTo(VISIT_CLOSURE_DTO.getDiagnosis());
+    }
+
+    @Test
+    public void shouldCreatePhysicalExaminationsIfPresent() {
+        //given
+        final List<PhysicalExaminationDto> examinationList = Lists.newArrayList(new PhysicalExaminationDto(),
+                new PhysicalExaminationDto());
+        VISIT_CLOSURE_DTO.setPhysicalExaminations(examinationList);
+        //when
+        visitService.end(VISIT.getId(), VISIT_CLOSURE_DTO);
+        //then
+        verify(examinationService).createPhysicalExaminations(examinationList);
+    }
+
+    @Test
+    public void shouldCreateLaboratoryExaminationsIfPresent() {
+        //given
+        final List<String> examinationCodeList= Lists.newArrayList("code", "code");
+        VISIT_CLOSURE_DTO.setLaboratoryExaminationCodes(examinationCodeList);
+        //when
+        visitService.end(VISIT.getId(), VISIT_CLOSURE_DTO);
+        //then
+        verify(examinationService).createLaboratoryExaminations(examinationCodeList);
+    }
+
+    @Test(expected = ResourceDoesNotExistException.class)
+    public void shouldThrowExceptionWhenTryingToEndNonExistingVisit() {
+        //given
+        //when
+        visitService.end(NOT_EXISTING_VISIT_ID, VISIT_CLOSURE_DTO);
+        //then
     }
 
 }

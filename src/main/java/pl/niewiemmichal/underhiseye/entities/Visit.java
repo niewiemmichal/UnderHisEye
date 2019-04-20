@@ -25,6 +25,7 @@ public class Visit {
     @Size(max = 8000)
     private String diagnosis;
 
+    @NonNull
     @Column(nullable = false)
     private VisitStatus status;
 

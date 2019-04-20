@@ -51,12 +51,10 @@ public class LaboratoryExamination {
     @ManyToOne
     private Examination examination;
 
-    @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
     private LaboratorySupervisor supervisor;
 
-    @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
     private LaboratoryAssistant assistant;
