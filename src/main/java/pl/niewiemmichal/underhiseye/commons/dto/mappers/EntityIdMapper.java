@@ -6,23 +6,28 @@ import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistExcep
 import pl.niewiemmichal.underhiseye.entities.Doctor;
 import pl.niewiemmichal.underhiseye.entities.Patient;
 import pl.niewiemmichal.underhiseye.entities.Registrant;
+import pl.niewiemmichal.underhiseye.entities.Visit;
 import pl.niewiemmichal.underhiseye.repositories.DoctorRepository;
 import pl.niewiemmichal.underhiseye.repositories.RegistrantRepository;
 import pl.niewiemmichal.underhiseye.repositories.PatientRepository;
+import pl.niewiemmichal.underhiseye.repositories.VisitRepository;
 
 @Component
 public class EntityIdMapper {
     private PatientRepository patientRepository;
     private DoctorRepository doctorRepository;
     private RegistrantRepository registrantRepository;
+    private VisitRepository visitRepository;
 
     @Autowired
     public EntityIdMapper(PatientRepository patientRepository,
                           DoctorRepository doctorRepository,
-                          RegistrantRepository registrantRepository) {
+                          RegistrantRepository registrantRepository,
+                          VisitRepository visitRepository) {
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
         this.registrantRepository = registrantRepository;
+        this.visitRepository = visitRepository;
     }
 
     Patient toPatient(Long id) {
@@ -35,6 +40,10 @@ public class EntityIdMapper {
 
     Registrant toRegistrant(Long id) {
         return registrantRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Registrant", "id", id.toString()));
+    }
+
+    Visit toVisit(Long id) {
+        return visitRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Visit", "id", id.toString()));
     }
 
 }

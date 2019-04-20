@@ -4,18 +4,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class VisitDto {
+public class VisitRegistrationDto {
 
-    private Long Id;
-    private String description;
+    @NotNull
     private LocalDate date;
+    @NotNull
     private Long patientId;
+    @NotNull
     private Long doctorId;
+    @NotNull
     private Long registrantId;
 
 }
