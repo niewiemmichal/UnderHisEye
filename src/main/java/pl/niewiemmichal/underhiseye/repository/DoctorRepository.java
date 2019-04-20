@@ -1,7 +1,7 @@
 package pl.niewiemmichal.underhiseye.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import pl.niewiemmichal.underhiseye.model.Doctor;
 
-public interface DoctorRepository extends CrudRepository<Doctor, Long> {
+public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 }

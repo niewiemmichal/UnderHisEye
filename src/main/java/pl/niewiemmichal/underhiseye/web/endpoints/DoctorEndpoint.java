@@ -4,16 +4,14 @@ import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceConflictException;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.model.Doctor;
 import pl.niewiemmichal.underhiseye.repository.DoctorRepository;
 
 import java.util.List;
 
-@Controller
 @RequestMapping("doctors")
-@ResponseBody
+@RestController
 public class DoctorEndpoint {
 
     private final DoctorRepository doctorRepository;
@@ -24,12 +22,13 @@ public class DoctorEndpoint {
 
     @GetMapping("/{id}")
     public Doctor getDoctor(@PathVariable Long id){
-        return doctorRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Doctor","id",id.toString()));
+        return doctorRepository.findById(id).orElseThrow(() ->
+                new ResourceDoesNotExistException("Doctor","id",id.toString()));
     }
 
     @GetMapping
     public List<Doctor> getAllDoctors(){
-        return (List<Doctor>) doctorRepository.findAll();
+        return  doctorRepository.findAll();
     }
 
     @PostMapping
