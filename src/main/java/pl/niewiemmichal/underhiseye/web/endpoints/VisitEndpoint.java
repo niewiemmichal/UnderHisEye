@@ -3,8 +3,8 @@ package pl.niewiemmichal.underhiseye.web.endpoints;
 import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceConflictException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
-import pl.niewiemmichal.underhiseye.model.Visit;
-import pl.niewiemmichal.underhiseye.repository.VisitRepository;
+import pl.niewiemmichal.underhiseye.entities.Visit;
+import pl.niewiemmichal.underhiseye.repositories.VisitRepository;
 
 import java.util.List;
 

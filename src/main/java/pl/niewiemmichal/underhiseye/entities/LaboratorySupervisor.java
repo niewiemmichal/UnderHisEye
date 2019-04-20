@@ -1,8 +1,11 @@
-package pl.niewiemmichal.underhiseye.model;
+package pl.niewiemmichal.underhiseye.entities;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -10,7 +13,7 @@ import javax.validation.constraints.Size;
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Patient {
+public class LaboratorySupervisor {
 
     @Id @GeneratedValue
     private Long id;
@@ -27,14 +30,4 @@ public class Patient {
     @Size(max = 50)
     private String surname;
 
-    @NonNull
-    @NotEmpty
-    @Column(nullable = false,length = 11)
-    @Size(min = 11, max = 11)
-    private String personalIdentityNumber;
-
-    @NonNull
-    @JoinColumn(nullable = false)
-    @ManyToOne
-    private Address address;
 }

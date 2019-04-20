@@ -1,4 +1,4 @@
-package pl.niewiemmichal.underhiseye.model;
+package pl.niewiemmichal.underhiseye.entities;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @RequiredArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Visit {
 
     @Id @GeneratedValue
@@ -45,7 +45,7 @@ public class Visit {
     @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
-    private PatientRegistrationSpecialist registrationSpecialist;
+    private Registrant registrationSpecialist;
 
     @Valid
     @NonNull

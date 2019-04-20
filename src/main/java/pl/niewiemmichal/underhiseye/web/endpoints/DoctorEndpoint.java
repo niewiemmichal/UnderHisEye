@@ -1,12 +1,10 @@
 package pl.niewiemmichal.underhiseye.web.endpoints;
-import org.springframework.http.ResponseEntity;
 import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
-import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceConflictException;
 
 import org.springframework.web.bind.annotation.*;
-import pl.niewiemmichal.underhiseye.model.Doctor;
-import pl.niewiemmichal.underhiseye.repository.DoctorRepository;
+import pl.niewiemmichal.underhiseye.entities.Doctor;
+import pl.niewiemmichal.underhiseye.repositories.DoctorRepository;
 
 import java.util.List;
 

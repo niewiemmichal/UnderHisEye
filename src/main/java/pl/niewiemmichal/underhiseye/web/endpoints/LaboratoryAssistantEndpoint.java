@@ -2,8 +2,8 @@ package pl.niewiemmichal.underhiseye.web.endpoints;
 
 import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.commons.exceptions.*;
-import pl.niewiemmichal.underhiseye.model.LaboratoryAssistant;
-import pl.niewiemmichal.underhiseye.repository.LaboratoryAssistantRepository;
+import pl.niewiemmichal.underhiseye.entities.LaboratoryAssistant;
+import pl.niewiemmichal.underhiseye.repositories.LaboratoryAssistantRepository;
 
 import java.util.List;
 

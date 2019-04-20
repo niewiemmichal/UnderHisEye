@@ -1,4 +1,4 @@
-package pl.niewiemmichal.underhiseye.model;
+package pl.niewiemmichal.underhiseye.entities;
 
 import lombok.*;
 
@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LaboratorySupervisor {
+public class Registrant {
 
     @Id @GeneratedValue
     private Long id;

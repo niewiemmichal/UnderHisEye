@@ -1,4 +1,4 @@
-package pl.niewiemmichal.underhiseye.model;
+package pl.niewiemmichal.underhiseye.entities;
 
 public enum VisitStatus {
     REGISTERED,

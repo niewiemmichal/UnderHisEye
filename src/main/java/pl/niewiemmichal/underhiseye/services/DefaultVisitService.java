@@ -3,10 +3,10 @@ package pl.niewiemmichal.underhiseye.services;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-import pl.niewiemmichal.underhiseye.model.Visit;
-import pl.niewiemmichal.underhiseye.repository.DoctorRepository;
-import pl.niewiemmichal.underhiseye.repository.PatientRegistrationSpecialistRepository;
-import pl.niewiemmichal.underhiseye.repository.PatientRepository;
+import pl.niewiemmichal.underhiseye.entities.Visit;
+import pl.niewiemmichal.underhiseye.repositories.DoctorRepository;
+import pl.niewiemmichal.underhiseye.repositories.RegistrantRepository;
+import pl.niewiemmichal.underhiseye.repositories.PatientRepository;
 
 @Service
 public class DefaultVisitService implements VisitService
@@ -14,11 +14,11 @@ public class DefaultVisitService implements VisitService
 
     private DoctorRepository doctorRepository;
     private PatientRepository patientRepository;
-    private PatientRegistrationSpecialistRepository registratorRepository;
+    private RegistrantRepository registratorRepository;
 
     @Autowired
     public DefaultVisitService(final DoctorRepository doctorRepository, final PatientRepository patientRepository,
-                               final PatientRegistrationSpecialistRepository registratorRepository)
+                               final RegistrantRepository registratorRepository)
     {
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;

@@ -13,16 +13,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import pl.niewiemmichal.underhiseye.commons.exceptions.VisitServiceException;
-import pl.niewiemmichal.underhiseye.model.Address;
-import pl.niewiemmichal.underhiseye.model.Doctor;
-import pl.niewiemmichal.underhiseye.model.Patient;
-import pl.niewiemmichal.underhiseye.model.PatientRegistrationSpecialist;
-import pl.niewiemmichal.underhiseye.model.Visit;
-import pl.niewiemmichal.underhiseye.model.VisitStatus;
-import pl.niewiemmichal.underhiseye.repository.DoctorRepository;
-import pl.niewiemmichal.underhiseye.repository.PatientRegistrationSpecialistRepository;
-import pl.niewiemmichal.underhiseye.repository.PatientRepository;
-import pl.niewiemmichal.underhiseye.repository.VisitRepository;
+import pl.niewiemmichal.underhiseye.entities.*;
+import pl.niewiemmichal.underhiseye.entities.Registrant;
+import pl.niewiemmichal.underhiseye.repositories.DoctorRepository;
+import pl.niewiemmichal.underhiseye.repositories.RegistrantRepository;
+import pl.niewiemmichal.underhiseye.repositories.PatientRepository;
+import pl.niewiemmichal.underhiseye.repositories.VisitRepository;
 
 public class DefaultVisitServiceTest
 {
@@ -32,7 +28,7 @@ public class DefaultVisitServiceTest
     @Mock
     private DoctorRepository doctorRepository;
     @Mock
-    private PatientRegistrationSpecialistRepository registrantRepository;
+    private RegistrantRepository registrantRepository;
     @Mock
     private VisitRepository visitRepository;
     @InjectMocks
@@ -44,8 +40,8 @@ public class DefaultVisitServiceTest
     private static final Patient PATIENT =
             new Patient("Existing", "Patient", "123", PATIENT_ADRESS);
 
-    private static final PatientRegistrationSpecialist REGISTRANT =
-            new PatientRegistrationSpecialist("Existing", "Registrator");
+    private static final Registrant REGISTRANT =
+            new Registrant("Existing", "Registrator");
 
     private static final Visit VISIT =
             new Visit("description", LocalDate.of(2019, 12, 20), PATIENT, REGISTRANT, DOCTOR);

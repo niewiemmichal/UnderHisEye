@@ -2,8 +2,8 @@ package pl.niewiemmichal.underhiseye.web.endpoints;
 
 import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.commons.exceptions.*;
-import pl.niewiemmichal.underhiseye.model.Address;
-import pl.niewiemmichal.underhiseye.repository.AddressRepository;
+import pl.niewiemmichal.underhiseye.entities.Address;
+import pl.niewiemmichal.underhiseye.repositories.AddressRepository;
 
 import java.util.List;
 
