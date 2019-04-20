@@ -1,4 +1,6 @@
 package pl.niewiemmichal.underhiseye.web.endpoints;
+import org.springframework.http.ResponseEntity;
+import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceConflictException;
 
@@ -32,18 +34,22 @@ public class DoctorEndpoint {
 
     @PostMapping
     public Doctor addDoctor(@RequestBody Doctor newDoctor){
+        if(newDoctor.getId() != null) throw new BadRequestException();
         return doctorRepository.save(newDoctor);
     }
 
     @PutMapping("/{id}")
     public Doctor updateDoctor(@RequestBody Doctor newDoctor, @PathVariable Long id){
-        if(!doctorRepository.findById(id).isPresent())
-            throw new ResourceDoesNotExistException("Question", "id", id.toString());
-        else if(newDoctor.getId() != null && !(id.equals(newDoctor.getId())))
-            throw new ResourceConflictException("Question", "id", id.toString(), newDoctor.getId().toString());
-        else {
-            newDoctor.setId(id);
-            return doctorRepository.save(newDoctor);
-        }
+        return doctorRepository.findById(id)
+                .map(doctor -> {
+                    doctor.setName(newDoctor.getName());
+                    doctor.setSurname(newDoctor.getSurname());
+                    doctor.setGmcNumber(newDoctor.getGmcNumber());
+                    return doctorRepository.save(doctor);
+                })
+                .orElseGet(() -> {
+                    newDoctor.setId(id);
+                    return doctorRepository.save(newDoctor);
+                });
     }
 }

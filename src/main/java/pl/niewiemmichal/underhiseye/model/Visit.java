@@ -3,8 +3,9 @@ package pl.niewiemmichal.underhiseye.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -20,38 +21,41 @@ public class Visit {
     @Size(max = 8000)
     private String description;
 
-    @NonNull
-    @Column(nullable = false, length = 8000)
+    @Column(length = 8000)
     @Size(max = 8000)
     private String diagnosis;
 
-    @NonNull
     @Column(nullable = false)
     private VisitStatus status;
 
-    @NonNull
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date registrationDate;
+    private LocalDate registrationDate;
 
     @NonNull
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    private LocalDate date;
 
+    @Valid
     @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
     private Patient patient;
 
+    @Valid
     @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
     private PatientRegistrationSpecialist registrationSpecialist;
 
+    @Valid
     @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
     private Doctor doctor;
+
+    @PrePersist
+    private void setDate() {
+        registrationDate = LocalDate.now();
+    }
 
 }

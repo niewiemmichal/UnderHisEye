@@ -3,6 +3,7 @@ package pl.niewiemmichal.underhiseye.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -21,14 +22,15 @@ public class PhysicalExamination {
     @Size(max = 8000)
     private String result;
 
+    @Valid
     @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
     private Examination examination;
 
+    @Valid
     @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
     private Visit visit;
-
 }
