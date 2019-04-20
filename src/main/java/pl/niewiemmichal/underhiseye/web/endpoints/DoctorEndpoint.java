@@ -37,9 +37,9 @@ public class DoctorEndpoint {
     @PutMapping("/{id}")
     public Doctor updateDoctor(@RequestBody Doctor newDoctor, @PathVariable Long id){
         if(!doctorRepository.findById(id).isPresent())
-            throw new ResourceDoesNotExistException("Question", "id", id.toString());
+            throw new ResourceDoesNotExistException("Doctor", "id", id.toString());
         else if(newDoctor.getId() != null && !(id.equals(newDoctor.getId())))
-            throw new ResourceConflictException("Question", "id", id.toString(), newDoctor.getId().toString());
+            throw new ResourceConflictException("Doctor", "id", id.toString(), newDoctor.getId().toString());
         else {
             newDoctor.setId(id);
             return doctorRepository.save(newDoctor);
