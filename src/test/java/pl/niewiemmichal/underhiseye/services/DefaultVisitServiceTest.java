@@ -251,4 +251,47 @@ public class DefaultVisitServiceTest
         //then
     }
 
+    @Test
+    public void shouldGetVisit() {
+        //given
+        //when
+        Visit actual = visitService.get(VISIT.getId());
+        //then
+        assertThat(actual).isEqualTo(VISIT);
+    }
+
+    @Test(expected = ResourceDoesNotExistException.class)
+    public void shouldThrowExceptionWhenTryingToGetNonExistingVisit() {
+        //given
+        //when
+        visitService.get(NOT_EXISTING_VISIT_ID);
+        //then
+        //expect exception
+    }
+
+    @Test
+    public void shouldGetAllVisits() {
+        //given
+        List<Visit> visits = Lists.newArrayList(
+                new Visit("1", VisitStatus.REGISTERED, LocalDate.now(), PATIENT, REGISTRANT, DOCTOR),
+                new Visit("2", VisitStatus.CANCELED, LocalDate.now(), PATIENT, REGISTRANT, DOCTOR),
+                new Visit("3", VisitStatus.FINISHED, LocalDate.now(), PATIENT, REGISTRANT, DOCTOR)
+        );
+        given(visitRepository.findAll()).willReturn(visits);
+        //when
+        List<Visit> actual = visitService.getAll();
+        //then
+        assertThat(actual).containsExactlyElementsOf(visits);
+    }
+
+    @Test
+    public void shouldGetNoVisits() {
+        //given
+        given(visitRepository.findAll()).willReturn(Lists.newArrayList());
+        //when
+        List<Visit> actual = visitService.getAll();
+        //then
+        assertThat(actual).isEmpty();
+    }
+
 }
