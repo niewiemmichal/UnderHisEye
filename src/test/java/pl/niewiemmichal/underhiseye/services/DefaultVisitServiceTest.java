@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -46,28 +47,34 @@ public class DefaultVisitServiceTest
     @InjectMocks
     private DefaultVisitService visitService;
 
-    private static final Doctor DOCTOR = new Doctor("Existing", "Doctor", "123");
-    private static final Address PATIENT_ADRESS = new Address("City", "Street", "HN");
+    private final Doctor DOCTOR = new Doctor("Existing", "Doctor", "123");
+    private final Address PATIENT_ADRESS = new Address("City", "Street", "HN");
 
-    private static final Patient PATIENT =
+    private final Patient PATIENT =
             new Patient("Existing", "Patient", "123", PATIENT_ADRESS);
 
-    private static final Registrant REGISTRANT =
+    private final Registrant REGISTRANT =
             new Registrant("Existing", "Registrator");
 
-    private static final Visit VISIT =
+    /*
+    private final Visit VISIT =
             new Visit("description", VisitStatus.REGISTERED, LocalDate.of(2019, 12, 20), PATIENT, REGISTRANT, DOCTOR);
+    */
+    private final Visit VISIT =
+            new Visit("", VisitStatus.REGISTERED, LocalDate.now(), PATIENT, REGISTRANT, DOCTOR);
+    private final VisitRegistrationDto VISIT_REGISTRATION_DTO = new VisitRegistrationDto();
+    private final VisitClosureDto VISIT_CLOSURE_DTO = new VisitClosureDto();
 
-    private static final VisitRegistrationDto VISIT_REGISTRATION_DTO = new VisitRegistrationDto();
-    private static final VisitClosureDto VISIT_CLOSURE_DTO = new VisitClosureDto();
-
-    private static Long NOT_EXISTING_DOCTOR_ID = 10L;
-    private static Long NOT_EXISTING_PATIENT_ID = 20L;
-    private static Long NOT_EXISTING_REGISTRANT_ID = 30L;
-    private static Long NOT_EXISTING_VISIT_ID = 40L;
+    private Long EXISTING_VISIT_ID = 4L;
+    private Long NOT_EXISTING_DOCTOR_ID = 10L;
+    private Long NOT_EXISTING_PATIENT_ID = 20L;
+    private Long NOT_EXISTING_REGISTRANT_ID = 30L;
+    private Long NOT_EXISTING_VISIT_ID = 40L;
 
     @Before
     public void setUpMocks() {
+
+        initMocks(this);
         DOCTOR.setId(1L);
         PATIENT.setId(2L);
         REGISTRANT.setId(3L);
@@ -80,8 +87,8 @@ public class DefaultVisitServiceTest
         given(patientRepository.findById(NOT_EXISTING_PATIENT_ID)).willReturn(Optional.empty());
         given(registrantRepository.findById(NOT_EXISTING_REGISTRANT_ID)).willReturn(Optional.empty());
 
-        VISIT.setId(4L);
-        given(visitRepository.findById(VISIT.getId())).willReturn(Optional.of(VISIT));
+        //VISIT.setId(4L);
+        given(visitRepository.findById(EXISTING_VISIT_ID)).willReturn(Optional.of(VISIT));
         given(visitRepository.findById(NOT_EXISTING_VISIT_ID)).willReturn(Optional.empty());
         given(visitRepository.save(VISIT)).willReturn(VISIT);
 
@@ -93,6 +100,7 @@ public class DefaultVisitServiceTest
         VISIT_CLOSURE_DTO.setDescription(VISIT.getDescription());
     }
 
+    //REGISTER method
     @Test
     public void shouldRegisterVisit() {
         //when
@@ -107,7 +115,7 @@ public class DefaultVisitServiceTest
     public void shouldNotRegisterVisitIfDoctorDoesNotExist() {
         //given
         VISIT.getDoctor().setId(NOT_EXISTING_DOCTOR_ID);
-
+        VISIT_REGISTRATION_DTO.setDoctorId(NOT_EXISTING_DOCTOR_ID);
         //when
         Visit created = visitService.register(VISIT_REGISTRATION_DTO);
 
@@ -119,6 +127,7 @@ public class DefaultVisitServiceTest
     public void shouldNotRegisterVisitIfRegistrantDoesNotExist() {
         //given
         VISIT.getRegistrationSpecialist().setId(NOT_EXISTING_REGISTRANT_ID);
+        VISIT_REGISTRATION_DTO.setRegistrantId(NOT_EXISTING_REGISTRANT_ID);
 
         //when
         Visit created = visitService.register(VISIT_REGISTRATION_DTO);
@@ -131,6 +140,7 @@ public class DefaultVisitServiceTest
     public void shouldNotRegisterVisitIfPatientDoesNotExist() {
         //given
         VISIT.getPatient().setId(NOT_EXISTING_PATIENT_ID);
+        VISIT_REGISTRATION_DTO.setPatientId(NOT_EXISTING_PATIENT_ID);
 
         //when
         Visit created = visitService.register(VISIT_REGISTRATION_DTO);
@@ -143,6 +153,7 @@ public class DefaultVisitServiceTest
     public void shouldNotCreateVisitIfPastDate() {
         //given
         VISIT.setDate(LocalDate.of(1997, 9, 25));
+        VISIT_REGISTRATION_DTO.setDate(LocalDate.of(1997, 9, 25));
 
         visitService.register(VISIT_REGISTRATION_DTO);
 
@@ -165,10 +176,15 @@ public class DefaultVisitServiceTest
         verify(patientRepository).save(PATIENT);
     }
 
+
+    //CANCEL
+
+
     @Test
     public void shouldCancelVisit() {
         //given
-        VISIT.setDescription(null);
+        VISIT.setId(4L);
+        //VISIT.setDescription(null);
         //when
         visitService.cancel(VISIT.getId(), "reason");
 
@@ -192,7 +208,7 @@ public class DefaultVisitServiceTest
     public void shouldNotCancelVisitIfFinished() {
         //given
         VISIT.setStatus(VisitStatus.FINISHED);
-
+        VISIT.setId(EXISTING_VISIT_ID);
         //when
         visitService.cancel(VISIT.getId(), "reason");
 
@@ -200,10 +216,13 @@ public class DefaultVisitServiceTest
         //expect exception
     }
 
+    //END method
+
     @Test
     public void shouldEndVisit() {
         //given
         //when
+        VISIT.setId(EXISTING_VISIT_ID);
         visitService.end(VISIT.getId(), VISIT_CLOSURE_DTO);
         //then
         assertThat(VISIT.getStatus()).isEqualTo(VisitStatus.FINISHED);
@@ -214,6 +233,7 @@ public class DefaultVisitServiceTest
     public void shouldSetDiagnosisIfPresent() {
         //given
         VISIT_CLOSURE_DTO.setDiagnosis("diagnosis");
+        VISIT.setId(EXISTING_VISIT_ID);
         //when
         visitService.end(VISIT.getId(), VISIT_CLOSURE_DTO);
         //then
@@ -223,6 +243,7 @@ public class DefaultVisitServiceTest
     @Test
     public void shouldCreatePhysicalExaminationsIfPresent() {
         //given
+        VISIT.setId(EXISTING_VISIT_ID);
         final List<PhysicalExaminationDto> examinationList = Lists.newArrayList(new PhysicalExaminationDto(),
                 new PhysicalExaminationDto());
         VISIT_CLOSURE_DTO.setPhysicalExaminations(examinationList);
@@ -235,6 +256,7 @@ public class DefaultVisitServiceTest
     @Test
     public void shouldCreateLaboratoryExaminationsIfPresent() {
         //given
+        VISIT.setId(EXISTING_VISIT_ID);
         final List<String> examinationCodeList= Lists.newArrayList("code", "code");
         VISIT_CLOSURE_DTO.setLaboratoryExaminationCodes(examinationCodeList);
         //when
@@ -251,9 +273,12 @@ public class DefaultVisitServiceTest
         //then
     }
 
+    //GET method
+
     @Test
     public void shouldGetVisit() {
         //given
+        VISIT.setId(EXISTING_VISIT_ID);
         //when
         Visit actual = visitService.get(VISIT.getId());
         //then
@@ -268,6 +293,8 @@ public class DefaultVisitServiceTest
         //then
         //expect exception
     }
+
+    //GETALL method
 
     @Test
     public void shouldGetAllVisits() {

@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Data
 @RequiredArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class PhysicalExamination {
 
     @Id @GeneratedValue
