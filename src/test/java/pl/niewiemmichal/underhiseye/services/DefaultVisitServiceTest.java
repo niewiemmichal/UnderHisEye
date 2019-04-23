@@ -161,6 +161,8 @@ public class DefaultVisitServiceTest
         //expect exception
     }
 
+
+    /* Not sure what this functionality is supposed to be doing */
     @Test
     public void shouldCreatePatient() {
         //given

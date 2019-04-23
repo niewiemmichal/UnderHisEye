@@ -82,15 +82,9 @@ public class DefaultVisitService implements VisitService
         if(!visitStateValidator.finishableVisit(visit.getStatus()))
             throw new BadRequestException();
         if(visitClosure.getPhysicalExaminations() != null)
-        {
             examinationService.createPhysicalExaminations(visitClosure.getPhysicalExaminations());
-        }
-
         if(visitClosure.getLaboratoryExaminationCodes() != null)
-        {
             examinationService.createLaboratoryExaminations(visitClosure.getLaboratoryExaminationCodes());
-        }
-
         if(visitClosure.getDiagnosis() != null)
             visit.setDiagnosis(visitClosure.getDiagnosis());
         visit.setStatus(VisitStatus.FINISHED);
