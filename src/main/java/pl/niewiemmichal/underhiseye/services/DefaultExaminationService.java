@@ -6,6 +6,7 @@ import pl.niewiemmichal.underhiseye.commons.dto.AssistantClosureDto;
 import pl.niewiemmichal.underhiseye.commons.dto.LaboratoryExaminationDto;
 import pl.niewiemmichal.underhiseye.commons.dto.PhysicalExaminationDto;
 import pl.niewiemmichal.underhiseye.commons.dto.SupervisorClosureDto;
+import pl.niewiemmichal.underhiseye.commons.dto.mappers.ExaminationMapper;
 import pl.niewiemmichal.underhiseye.entities.LaboratoryExamination;
 import pl.niewiemmichal.underhiseye.entities.PhysicalExamination;
 import pl.niewiemmichal.underhiseye.repositories.*;
@@ -21,18 +22,21 @@ public class DefaultExaminationService implements ExaminationService {
     private final PhysicalExaminationRepository physicalExaminationRepository;
     private final LaboratoryAssistantRepository laboratoryAssistantRepository;
     private final LaboratorySupervisorRepository laboratorySupervisorRepository;
+    private final ExaminationMapper examinationMapper;
 
     @Autowired
     public DefaultExaminationService(ExaminationRepository examinationRepository,
                                      LaboratoryExaminationRepository laboratoryExaminationRepository,
                                      PhysicalExaminationRepository physicalExaminationRepository,
                                      LaboratoryAssistantRepository laboratoryAssistantRepository,
-                                     LaboratorySupervisorRepository laboratorySupervisorRepository) {
+                                     LaboratorySupervisorRepository laboratorySupervisorRepository,
+                                     ExaminationMapper examinationMapper) {
         this.examinationRepository = examinationRepository;
         this.laboratoryExaminationRepository = laboratoryExaminationRepository;
         this.physicalExaminationRepository = physicalExaminationRepository;
         this.laboratoryAssistantRepository = laboratoryAssistantRepository;
         this.laboratorySupervisorRepository = laboratorySupervisorRepository;
+        this.examinationMapper = examinationMapper;
     }
 
     @Override

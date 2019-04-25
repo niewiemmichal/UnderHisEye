@@ -7,7 +7,7 @@ import pl.niewiemmichal.underhiseye.entities.*;
 import pl.niewiemmichal.underhiseye.repositories.*;
 
 @Component
-public class EntityIdMapper {
+class EntityIdMapper {
     private PatientRepository patientRepository;
     private DoctorRepository doctorRepository;
     private RegistrantRepository registrantRepository;
@@ -17,7 +17,7 @@ public class EntityIdMapper {
     private LaboratoryAssistantRepository laboratoryAssistantRepository;
 
     @Autowired
-    public EntityIdMapper(PatientRepository patientRepository,
+    EntityIdMapper(PatientRepository patientRepository,
                           DoctorRepository doctorRepository,
                           RegistrantRepository registrantRepository,
                           VisitRepository visitRepository,

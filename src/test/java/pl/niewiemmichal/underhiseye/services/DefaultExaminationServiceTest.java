@@ -3,12 +3,16 @@ package pl.niewiemmichal.underhiseye.services;
 import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 import pl.niewiemmichal.underhiseye.commons.dto.AssistantClosureDto;
 import pl.niewiemmichal.underhiseye.commons.dto.LaboratoryExaminationDto;
 import pl.niewiemmichal.underhiseye.commons.dto.PhysicalExaminationDto;
 import pl.niewiemmichal.underhiseye.commons.dto.SupervisorClosureDto;
+import pl.niewiemmichal.underhiseye.commons.dto.mappers.ExaminationMapper;
 import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.entities.*;
 import pl.niewiemmichal.underhiseye.repositories.*;
@@ -24,24 +28,26 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class DefaultExaminationServiceTest {
 
-    @Mock
+    @MockBean
     private ExaminationRepository examinationRepository;
 
-    @Mock
+    @MockBean
     private LaboratoryExaminationRepository laboratoryExaminationRepository;
 
-    @Mock
+    @MockBean
     private PhysicalExaminationRepository physicalExaminationRepository;
 
-    @Mock
+    @MockBean
     private LaboratoryAssistantRepository laboratoryAssistantRepository;
 
-    @Mock
+    @MockBean
     private LaboratorySupervisorRepository laboratorySupervisorRepository;
 
-    @InjectMocks
+    @Autowired
     private DefaultExaminationService examinationService;
 
     private static final String NOT_EXISTING_EXAMINATION_CODE = "wrong_code";
@@ -69,11 +75,9 @@ public class DefaultExaminationServiceTest {
     private AssistantClosureDto assistantClosureDto = new AssistantClosureDto("result", 100L);
     private SupervisorClosureDto supervisorClosureDto = new SupervisorClosureDto(200L);
 
-    private PhysicalExaminationDto physicalExaminationDto = new PhysicalExaminationDto(physicalExamination.getResult(),
-            physicalExamination.getExamination().getCode(), visit.getId());
+    private PhysicalExaminationDto physicalExaminationDto;
 
-    private LaboratoryExaminationDto laboratoryExaminationDto = new LaboratoryExaminationDto(laboratoryExamination.getResult(),
-            laboratoryExamination.getExamination().getCode(), visit.getId());
+    private LaboratoryExaminationDto laboratoryExaminationDto;
 
     @Before
     public void setUpMocks() {
@@ -84,6 +88,15 @@ public class DefaultExaminationServiceTest {
         laboratoryExamination.setId(1000L);
         physicalExamination.setId(2000L);
         supervisorClosureDto.setSupervisorNote("note");
+
+        physicalExaminationDto = new PhysicalExaminationDto(physicalExamination.getResult(),
+                physicalExamination.getExamination().getCode(), visit.getId());
+
+        laboratoryExaminationDto =
+                new LaboratoryExaminationDto(laboratoryExamination.getExamination().getCode(), visit.getId());
+
+        laboratoryExaminationDto.setNote("note");
+
 
         //examination REPOSITORY MOCKS
         given(examinationRepository.findById(examination.getCode()))
@@ -111,7 +124,6 @@ public class DefaultExaminationServiceTest {
         //assistant REPO MOCKS
         given(laboratoryAssistantRepository.findById(assistant.getId())).willReturn(Optional.of(assistant));
         given(laboratoryAssistantRepository.findById(NOT_EXISTING_ASSISTANT_ID)).willReturn(Optional.empty());
-
     }
 
     @Test

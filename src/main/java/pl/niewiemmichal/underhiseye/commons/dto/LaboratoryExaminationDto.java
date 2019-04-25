@@ -6,7 +6,6 @@ import lombok.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class LaboratoryExaminationDto {
-    @NonNull
     private String note;
     @NonNull
     private String examinationCode;

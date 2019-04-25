@@ -1,48 +1,55 @@
 package pl.niewiemmichal.underhiseye.web.endpoints;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.niewiemmichal.underhiseye.commons.dto.VisitClosureDto;
+import pl.niewiemmichal.underhiseye.commons.dto.VisitRegistrationDto;
+import pl.niewiemmichal.underhiseye.commons.dto.VisitWithExaminationsDto;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceConflictException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 import pl.niewiemmichal.underhiseye.entities.Visit;
 import pl.niewiemmichal.underhiseye.repositories.VisitRepository;
+import pl.niewiemmichal.underhiseye.services.VisitService;
 
+import javax.validation.Valid;
+import javax.xml.ws.RequestWrapper;
+import javax.xml.ws.Response;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping ("visits")
 @RestController
 public class VisitEndpoint {
 
-    private final VisitRepository visitRepository;
+    private final VisitService visitService;
 
-    VisitEndpoint(VisitRepository visitRepository) {
-        this.visitRepository = visitRepository;
-    }
-
-    @GetMapping ("/{id}")
-    public Visit getVisit(@PathVariable Long id){
-        return visitRepository.findById(id).orElseThrow(()
-                -> new ResourceDoesNotExistException("Visit","id",id.toString()));
+    @Autowired
+    VisitEndpoint(VisitService visitService) {
+        this.visitService = visitService;
     }
 
     @GetMapping
-    public List<Visit> getAllVisits(){
-        return visitRepository.findAll();
+    public List<Visit> getAll() {
+        return visitService.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public VisitWithExaminationsDto get(@PathVariable Long id) {
+        return visitService.getFatVisit(id);
     }
 
     @PostMapping
-    public Visit addVisit(@RequestBody Visit newVisit){
-        return visitRepository.save(newVisit);
+    public Visit registerVisit(@Valid @RequestBody VisitRegistrationDto dto){
+        return visitService.register(dto);
     }
 
-    @PutMapping("/{id}")
-    public Visit updateVisit(@RequestBody Visit newVisit, @PathVariable Long id) {
-        if(!visitRepository.findById(id).isPresent())
-            throw new ResourceDoesNotExistException("Visit", "id", id.toString());
-        else if(newVisit.getId() != null && !(id.equals(newVisit.getId())))
-            throw new ResourceConflictException("Visit", "id", id.toString(), newVisit.getId().toString());
-        else {
-            newVisit.setId(id);
-            return visitRepository.save(newVisit);
-        }
+    @PatchMapping("/cancel/{id}")
+    public void cancelVisit(@PathVariable Long id, @RequestParam String reason) {
+        visitService.cancel(id, reason);
+    }
+
+    @PatchMapping("/end/{id}")
+    public void endVisit(@PathVariable Long id, @Valid @RequestBody VisitClosureDto dto) {
+        visitService.end(id, dto);
     }
 }
