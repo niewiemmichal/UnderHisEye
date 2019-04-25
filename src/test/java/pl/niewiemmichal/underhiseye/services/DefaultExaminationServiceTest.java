@@ -12,7 +12,6 @@ import pl.niewiemmichal.underhiseye.commons.dto.AssistantClosureDto;
 import pl.niewiemmichal.underhiseye.commons.dto.LaboratoryExaminationDto;
 import pl.niewiemmichal.underhiseye.commons.dto.PhysicalExaminationDto;
 import pl.niewiemmichal.underhiseye.commons.dto.SupervisorClosureDto;
-import pl.niewiemmichal.underhiseye.commons.dto.mappers.ExaminationMapper;
 import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.entities.*;
 import pl.niewiemmichal.underhiseye.repositories.*;

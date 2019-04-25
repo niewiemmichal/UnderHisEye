@@ -13,7 +13,6 @@ import pl.niewiemmichal.underhiseye.repositories.PatientRepository;
 
 import java.util.List;
 
-
 @Service
 public class DefaultVisitService implements VisitService
 {

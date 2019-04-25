@@ -9,6 +9,7 @@ import pl.niewiemmichal.underhiseye.commons.dto.SupervisorClosureDto;
 import pl.niewiemmichal.underhiseye.commons.dto.mappers.ExaminationMapper;
 import pl.niewiemmichal.underhiseye.entities.LaboratoryExamination;
 import pl.niewiemmichal.underhiseye.entities.PhysicalExamination;
+import pl.niewiemmichal.underhiseye.entities.Visit;
 import pl.niewiemmichal.underhiseye.repositories.*;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package pl.niewiemmichal.underhiseye.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -16,7 +15,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import org.mockito.Mockito;
 import pl.niewiemmichal.underhiseye.commons.dto.*;
 import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
