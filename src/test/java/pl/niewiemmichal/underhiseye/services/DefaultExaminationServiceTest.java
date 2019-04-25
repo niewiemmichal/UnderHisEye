@@ -78,7 +78,7 @@ public class DefaultExaminationServiceTest {
     private final LaboratorySupervisor SUPERVISOR = new LaboratorySupervisor("name", "surname");
 
     private final AssistantClosureDto ASSISTANT_CLOSURE_DTO = new AssistantClosureDto("result", 100L);
-    private final SupervisorClosureDto SUPERVISOR_CLOSURE_DTO = new SupervisorClosureDto("note", 200L);
+    private final SupervisorClosureDto SUPERVISOR_CLOSURE_DTO = new SupervisorClosureDto(200L);
 
     private final Long NOT_EXISTING_ASSISTANT_ID = 101L;
     private final Long NOT_EXISTING_SUPERVISOR_ID = 202L;
@@ -98,6 +98,7 @@ public class DefaultExaminationServiceTest {
         EXAMINATION.setCode("code0");
         LABORATORY_EXAMINATION.setId(1000L);
         PHYSICAL_EXAMINATION.setId(2000L);
+        SUPERVISOR_CLOSURE_DTO.setSupervisorNote("note");
 
         //EXAMINATION REPOSITORY MOCKS
         given(examinationRepository.findById(EXAMINATION.getCode()))

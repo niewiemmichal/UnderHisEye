@@ -10,8 +10,10 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
 @RequiredArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class PhysicalExamination {
 
     @Id @GeneratedValue
