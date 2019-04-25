@@ -1,16 +1,11 @@
 package pl.niewiemmichal.underhiseye.commons.dto.mappers;
 
+import org.mapstruct.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
-import pl.niewiemmichal.underhiseye.entities.Doctor;
-import pl.niewiemmichal.underhiseye.entities.Patient;
-import pl.niewiemmichal.underhiseye.entities.Registrant;
-import pl.niewiemmichal.underhiseye.entities.Visit;
-import pl.niewiemmichal.underhiseye.repositories.DoctorRepository;
-import pl.niewiemmichal.underhiseye.repositories.RegistrantRepository;
-import pl.niewiemmichal.underhiseye.repositories.PatientRepository;
-import pl.niewiemmichal.underhiseye.repositories.VisitRepository;
+import pl.niewiemmichal.underhiseye.entities.*;
+import pl.niewiemmichal.underhiseye.repositories.*;
 
 @Component
 public class EntityIdMapper {
@@ -18,16 +13,19 @@ public class EntityIdMapper {
     private DoctorRepository doctorRepository;
     private RegistrantRepository registrantRepository;
     private VisitRepository visitRepository;
+    private ExaminationRepository examinationRepository;
 
     @Autowired
     public EntityIdMapper(PatientRepository patientRepository,
                           DoctorRepository doctorRepository,
                           RegistrantRepository registrantRepository,
-                          VisitRepository visitRepository) {
+                          VisitRepository visitRepository,
+                          ExaminationRepository examinationRepository) {
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
         this.registrantRepository = registrantRepository;
         this.visitRepository = visitRepository;
+        this.examinationRepository = examinationRepository;
     }
 
     Patient toPatient(Long id) {
@@ -44,6 +42,10 @@ public class EntityIdMapper {
 
     Visit toVisit(Long id) {
         return visitRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Visit", "id", id.toString()));
+    }
+
+    Examination toExamination(String code) {
+        return examinationRepository.findById(code).orElseThrow(() -> new ResourceDoesNotExistException("Examination", "code", code));
     }
 
 }

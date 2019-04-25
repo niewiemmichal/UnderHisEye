@@ -1,16 +1,19 @@
 package pl.niewiemmichal.underhiseye.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.apache.tomcat.jni.Local;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
 @Data
 @RequiredArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class LaboratoryExamination {
 
     @Id @GeneratedValue
@@ -35,16 +38,12 @@ public class LaboratoryExamination {
     @Type(type="text")
     private String supervisorNote;
 
-    @NonNull
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date orderDate;
+    private LocalDate orderDate;
 
-    @Temporal(TemporalType.DATE)
-    private Date completionDate;
+    private LocalDate completionDate;
 
-    @Temporal(TemporalType.DATE)
-    private Date approvalDate;
+    private LocalDate approvalDate;
 
     @NonNull
     @JoinColumn(nullable = false)
@@ -59,9 +58,15 @@ public class LaboratoryExamination {
     @ManyToOne
     private LaboratoryAssistant assistant;
 
+    @JsonIgnore
     @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
     private Visit visit;
+
+    @PrePersist
+    private void calculateOrderDate() {
+        orderDate = LocalDate.now();
+    }
 
 }

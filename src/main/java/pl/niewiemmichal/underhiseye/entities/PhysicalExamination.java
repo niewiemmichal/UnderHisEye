@@ -1,5 +1,6 @@
 package pl.niewiemmichal.underhiseye.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Data
 @RequiredArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class PhysicalExamination {
 
     @Id @GeneratedValue
@@ -28,6 +29,7 @@ public class PhysicalExamination {
     @ManyToOne
     private Examination examination;
 
+    @JsonIgnore
     @Valid
     @NonNull
     @JoinColumn(nullable = false)

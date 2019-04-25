@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @RequiredArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Visit {
 
     @Id @GeneratedValue

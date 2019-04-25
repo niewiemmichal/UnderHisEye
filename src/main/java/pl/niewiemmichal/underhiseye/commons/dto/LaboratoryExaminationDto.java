@@ -1,14 +1,13 @@
 package pl.niewiemmichal.underhiseye.commons.dto;
-
 import lombok.*;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class PhysicalExaminationDto {
+public class LaboratoryExaminationDto {
     @NonNull
-    private String result;
+    private String note;
     @NonNull
     private String examinationCode;
     @NonNull

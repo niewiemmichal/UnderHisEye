@@ -5,13 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.niewiemmichal.underhiseye.commons.dto.VisitClosureDto;
 import pl.niewiemmichal.underhiseye.commons.dto.VisitRegistrationDto;
+import pl.niewiemmichal.underhiseye.commons.dto.VisitWithExaminationsDto;
 import pl.niewiemmichal.underhiseye.entities.Visit;
-import pl.niewiemmichal.underhiseye.entities.VisitStatus;
 import pl.niewiemmichal.underhiseye.repositories.DoctorRepository;
 import pl.niewiemmichal.underhiseye.repositories.RegistrantRepository;
 import pl.niewiemmichal.underhiseye.repositories.PatientRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -55,6 +54,11 @@ public class DefaultVisitService implements VisitService
 
     @Override
     public Visit get(Long id) {
+        return null;
+    }
+
+    @Override
+    public VisitWithExaminationsDto getFatVisit(Long id) {
         return null;
     }
 
