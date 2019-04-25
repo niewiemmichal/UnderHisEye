@@ -34,23 +34,28 @@ public class EntityIdMapper {
     }
 
     Patient toPatient(Long id) {
-        return patientRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Patient", "id", id.toString()));
+        return patientRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Patient", "id",
+                id.toString()));
     }
 
     Doctor toDoctor(Long id) {
-        return doctorRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Doctor", "id", id.toString()));
+        return doctorRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Doctor", "id",
+                id.toString()));
     }
 
     Registrant toRegistrant(Long id) {
-        return registrantRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Registrant", "id", id.toString()));
+        return registrantRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Registrant", "id",
+                id.toString()));
     }
 
     Visit toVisit(Long id) {
-        return visitRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Visit", "id", id.toString()));
+        return visitRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Visit", "id",
+                id.toString()));
     }
 
     Examination toExamination(String code) {
-        return examinationRepository.findById(code).orElseThrow(() -> new ResourceDoesNotExistException("Examination", "code", code));
+        return examinationRepository.findById(code).orElseThrow(() -> new ResourceDoesNotExistException("Examination",
+                "code", code));
     }
 
     LaboratoryAssistant toAssistant(Long id) {

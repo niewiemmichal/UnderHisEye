@@ -19,9 +19,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -46,85 +44,73 @@ public class DefaultExaminationServiceTest {
     @InjectMocks
     private DefaultExaminationService examinationService;
 
-    private final Examination EXAMINATION = new Examination("name0");
+    private static final String NOT_EXISTING_EXAMINATION_CODE = "wrong_code";
+    private static final Long NOT_EXISTING_VISIT_ID = 11L;
+    private static final Long NOT_EXISTING_PHYSICAL_EXAMINATION_ID = 1001L;
+    private static final Long NOT_EXISTING_LABORATORY_EXAMINATION_ID = 2001L;
+    private static final Long NOT_EXISTING_ASSISTANT_ID = 101L;
+    private static final Long NOT_EXISTING_SUPERVISOR_ID = 202L;
 
-    private final String NOT_EXISTING_EXAMINATION_CODE = "wrong_code";
+    private Examination examination = new Examination("name0");
+    private Doctor doctor = new Doctor("Existing", "Doctor", "123");
+    private Address patientAddress = new Address("City", "Street", "HN");
+    private Patient patient = new Patient("Existing", "Patient", "123", patientAddress);
+    private Registrant registrant = new Registrant("Existing", "Registrant");
 
-    private final Doctor DOCTOR = new Doctor("Existing", "Doctor", "123");
-    private final Address PATIENT_ADDRESS = new Address("City", "Street", "HN");
+    private Visit visit = new Visit("description", VisitStatus.REGISTERED,
+            LocalDate.of(2019, 12, 20), patient, registrant, doctor);
 
-    private final Patient PATIENT = new Patient("Existing", "Patient", "123",
-            PATIENT_ADDRESS);
+    private LaboratoryExamination laboratoryExamination = new LaboratoryExamination(LaboratoryExamStatus.ORDERED,
+            examination, visit);
 
-    private final Registrant REGISTRANT =
-            new Registrant("Existing", "Registrator");
+    private PhysicalExamination physicalExamination = new PhysicalExamination("result", examination, visit);
+    private LaboratoryAssistant assistant = new LaboratoryAssistant("name", "surname");
+    private LaboratorySupervisor supervisor = new LaboratorySupervisor("name", "surname");
+    private AssistantClosureDto assistantClosureDto = new AssistantClosureDto("result", 100L);
+    private SupervisorClosureDto supervisorClosureDto = new SupervisorClosureDto(200L);
 
-    private final Visit VISIT =
-            new Visit("description", VisitStatus.REGISTERED, LocalDate.of(2019, 12, 20), //
-                    PATIENT, REGISTRANT, DOCTOR);
+    private PhysicalExaminationDto physicalExaminationDto = new PhysicalExaminationDto(physicalExamination.getResult(),
+            physicalExamination.getExamination().getCode(), visit.getId());
 
-    private final Long NOT_EXISTING_VISIT_ID = 11L;
-
-    private final LaboratoryExamination LABORATORY_EXAMINATION = new LaboratoryExamination( //
-            LaboratoryExamStatus.ORDERED, EXAMINATION, VISIT);
-
-    private final PhysicalExamination PHYSICAL_EXAMINATION = new PhysicalExamination("result", EXAMINATION, //
-            VISIT);
-
-    private final Long NOT_EXISTING_PHYSICAL_EXAMINATION_ID = 1001L;
-    private final Long NOT_EXISTING_LABORATORY_EXAMINATION_ID = 2001L;
-
-    private final LaboratoryAssistant ASSISTANT = new LaboratoryAssistant("name", "surname");
-    private final LaboratorySupervisor SUPERVISOR = new LaboratorySupervisor("name", "surname");
-
-    private final AssistantClosureDto ASSISTANT_CLOSURE_DTO = new AssistantClosureDto("result", 100L);
-    private final SupervisorClosureDto SUPERVISOR_CLOSURE_DTO = new SupervisorClosureDto(200L);
-
-    private final Long NOT_EXISTING_ASSISTANT_ID = 101L;
-    private final Long NOT_EXISTING_SUPERVISOR_ID = 202L;
-
-    PhysicalExaminationDto PHYSICAL_EXAMINATION_DTO = new PhysicalExaminationDto(PHYSICAL_EXAMINATION.getResult(),
-            PHYSICAL_EXAMINATION.getExamination().getCode(), VISIT.getId());
-
-    LaboratoryExaminationDto LABORATORY_EXAMINATION_DTO= new LaboratoryExaminationDto(LABORATORY_EXAMINATION.getResult(),
-            LABORATORY_EXAMINATION.getExamination().getCode(), VISIT.getId());
+    private LaboratoryExaminationDto laboratoryExaminationDto = new LaboratoryExaminationDto(laboratoryExamination.getResult(),
+            laboratoryExamination.getExamination().getCode(), visit.getId());
 
     @Before
     public void setUpMocks() {
         initMocks(this);
-        VISIT.setId(10L);
-        ASSISTANT.setId(100L);
-        SUPERVISOR.setId(200L);
-        EXAMINATION.setCode("code0");
-        LABORATORY_EXAMINATION.setId(1000L);
-        PHYSICAL_EXAMINATION.setId(2000L);
-        SUPERVISOR_CLOSURE_DTO.setSupervisorNote("note");
+        visit.setId(10L);
+        assistant.setId(100L);
+        supervisor.setId(200L);
+        examination.setCode("code0");
+        laboratoryExamination.setId(1000L);
+        physicalExamination.setId(2000L);
+        supervisorClosureDto.setSupervisorNote("note");
 
-        //EXAMINATION REPOSITORY MOCKS
-        given(examinationRepository.findById(EXAMINATION.getCode()))
-                .willReturn(Optional.of(EXAMINATION));
+        //examination REPOSITORY MOCKS
+        given(examinationRepository.findById(examination.getCode()))
+                .willReturn(Optional.of(examination));
         given(examinationRepository.findById(NOT_EXISTING_EXAMINATION_CODE)).willReturn(Optional.empty());
 
-        //LABORATORY EXAMINATION REPOSITORY MOCKS
-        given(laboratoryExaminationRepository.findById(LABORATORY_EXAMINATION.getId()))
-                .willReturn(Optional.of(LABORATORY_EXAMINATION));
+        //LABORATORY examination REPOSITORY MOCKS
+        given(laboratoryExaminationRepository.findById(laboratoryExamination.getId()))
+                .willReturn(Optional.of(laboratoryExamination));
         given(laboratoryExaminationRepository.findById(NOT_EXISTING_LABORATORY_EXAMINATION_ID))
                 .willReturn(Optional.empty());
-        given(laboratoryExaminationRepository.save(LABORATORY_EXAMINATION)).willReturn(LABORATORY_EXAMINATION);
+        given(laboratoryExaminationRepository.save(laboratoryExamination)).willReturn(laboratoryExamination);
 
-        //PHYSICAL EXAMINATION REPOSITORY MOCKS
-        given(physicalExaminationRepository.findById(PHYSICAL_EXAMINATION.getId()))
-                .willReturn(Optional.of(PHYSICAL_EXAMINATION));
+        //PHYSICAL examination REPOSITORY MOCKS
+        given(physicalExaminationRepository.findById(physicalExamination.getId()))
+                .willReturn(Optional.of(physicalExamination));
         given(physicalExaminationRepository.findById(NOT_EXISTING_PHYSICAL_EXAMINATION_ID))
                 .willReturn(Optional.empty());
-        given(physicalExaminationRepository.save(PHYSICAL_EXAMINATION)).willReturn(PHYSICAL_EXAMINATION);
+        given(physicalExaminationRepository.save(physicalExamination)).willReturn(physicalExamination);
 
-        //SUPERVISOR REPO MOCKS
-        given(laboratorySupervisorRepository.findById(SUPERVISOR.getId())).willReturn(Optional.of(SUPERVISOR));
+        //supervisor REPO MOCKS
+        given(laboratorySupervisorRepository.findById(supervisor.getId())).willReturn(Optional.of(supervisor));
         given(laboratorySupervisorRepository.findById(NOT_EXISTING_SUPERVISOR_ID)).willReturn(Optional.empty());
 
-        //ASSISTANT REPO MOCKS
-        given(laboratoryAssistantRepository.findById(ASSISTANT.getId())).willReturn(Optional.of(ASSISTANT));
+        //assistant REPO MOCKS
+        given(laboratoryAssistantRepository.findById(assistant.getId())).willReturn(Optional.of(assistant));
         given(laboratoryAssistantRepository.findById(NOT_EXISTING_ASSISTANT_ID)).willReturn(Optional.empty());
 
     }
@@ -132,16 +118,16 @@ public class DefaultExaminationServiceTest {
     @Test
     public void shouldCreatePhysicalExaminations() {
         //given
-        List<PhysicalExaminationDto> physicalExaminations = Lists.newArrayList(PHYSICAL_EXAMINATION_DTO,
-                PHYSICAL_EXAMINATION_DTO, PHYSICAL_EXAMINATION_DTO);
+        List<PhysicalExaminationDto> physicalExaminations = Lists.newArrayList(physicalExaminationDto,
+                physicalExaminationDto, physicalExaminationDto);
 
         //when
         List<PhysicalExamination> created = examinationService.createPhysicalExaminations(physicalExaminations);
 
         //then
-        PHYSICAL_EXAMINATION.setId(null);
-        List<PhysicalExamination> expected = Lists.newArrayList(PHYSICAL_EXAMINATION, PHYSICAL_EXAMINATION,
-                PHYSICAL_EXAMINATION);
+        physicalExamination.setId(null);
+        List<PhysicalExamination> expected = Lists.newArrayList(physicalExamination, physicalExamination,
+                physicalExamination);
         assertThat(created).containsExactlyElementsOf(expected);
         verify(physicalExaminationRepository).saveAll(expected);
     }
@@ -151,16 +137,16 @@ public class DefaultExaminationServiceTest {
 
 
         //given
-        List<LaboratoryExaminationDto> laboratoryExaminations = Lists.newArrayList(LABORATORY_EXAMINATION_DTO,
-                LABORATORY_EXAMINATION_DTO, LABORATORY_EXAMINATION_DTO);
+        List<LaboratoryExaminationDto> laboratoryExaminations = Lists.newArrayList(laboratoryExaminationDto,
+                laboratoryExaminationDto, laboratoryExaminationDto);
 
         //when
         List<LaboratoryExamination> created = examinationService.createLaboratoryExaminations(laboratoryExaminations);
 
         //then
-        LABORATORY_EXAMINATION.setId(null);
-        List<LaboratoryExamination> expected = Lists.newArrayList(LABORATORY_EXAMINATION, LABORATORY_EXAMINATION,
-                LABORATORY_EXAMINATION);
+        laboratoryExamination.setId(null);
+        List<LaboratoryExamination> expected = Lists.newArrayList(laboratoryExamination, laboratoryExamination,
+                laboratoryExamination);
         assertThat(created).containsExactlyElementsOf(expected);
         verify(laboratoryExaminationRepository).saveAll(expected);
     }
@@ -169,8 +155,8 @@ public class DefaultExaminationServiceTest {
     public void shouldThrowWhenExaminationCodeIsWrongWhileCreatingPhysicalExaminations() {
         //given
         //when
-        PHYSICAL_EXAMINATION_DTO.setExaminationCode(NOT_EXISTING_EXAMINATION_CODE);
-        examinationService.createPhysicalExaminations(Lists.newArrayList(PHYSICAL_EXAMINATION_DTO));
+        physicalExaminationDto.setExaminationCode(NOT_EXISTING_EXAMINATION_CODE);
+        examinationService.createPhysicalExaminations(Lists.newArrayList(physicalExaminationDto));
         //then
         //expect exception
     }
@@ -179,8 +165,8 @@ public class DefaultExaminationServiceTest {
     public void shouldThrowWhenExaminationCodeIsWrongWhileCreatingLaboratoryExaminations() {
         //given
         //when
-        LABORATORY_EXAMINATION_DTO.setExaminationCode(NOT_EXISTING_EXAMINATION_CODE);
-        examinationService.createLaboratoryExaminations(Lists.newArrayList(LABORATORY_EXAMINATION_DTO));
+        laboratoryExaminationDto.setExaminationCode(NOT_EXISTING_EXAMINATION_CODE);
+        examinationService.createLaboratoryExaminations(Lists.newArrayList(laboratoryExaminationDto));
         //then
         //expect exception
     }
@@ -189,8 +175,8 @@ public class DefaultExaminationServiceTest {
     public void shouldThrowWhenVisitIdIsWrongWhileCreatingPhysicalExaminations() {
         //given
         //when
-        PHYSICAL_EXAMINATION_DTO.setVisitId(NOT_EXISTING_VISIT_ID);
-        examinationService.createPhysicalExaminations(Lists.newArrayList(PHYSICAL_EXAMINATION_DTO));
+        physicalExaminationDto.setVisitId(NOT_EXISTING_VISIT_ID);
+        examinationService.createPhysicalExaminations(Lists.newArrayList(physicalExaminationDto));
         //then
         //expect exception
     }
@@ -199,8 +185,8 @@ public class DefaultExaminationServiceTest {
     public void shouldThrowWhenVisitIdIsWrongWhileCreatingLaboratoryExaminations() {
         //given
         //when
-        LABORATORY_EXAMINATION_DTO.setVisitId(NOT_EXISTING_VISIT_ID);
-        examinationService.createLaboratoryExaminations(Lists.newArrayList(LABORATORY_EXAMINATION_DTO));
+        laboratoryExaminationDto.setVisitId(NOT_EXISTING_VISIT_ID);
+        examinationService.createLaboratoryExaminations(Lists.newArrayList(laboratoryExaminationDto));
         //then
         //expect exception
     }
@@ -209,21 +195,21 @@ public class DefaultExaminationServiceTest {
     public void shouldFinishExamination() {
         //given
         //when
-        LaboratoryExamination actual = examinationService.finish(LABORATORY_EXAMINATION.getId(), ASSISTANT_CLOSURE_DTO);
+        LaboratoryExamination actual = examinationService.finish(laboratoryExamination.getId(), assistantClosureDto);
         //then
         assertThat(actual.getStatus()).isEqualTo(LaboratoryExamStatus.FINISHED);
-        verify(laboratoryExaminationRepository).save(LABORATORY_EXAMINATION);
+        verify(laboratoryExaminationRepository).save(laboratoryExamination);
     }
 
     @Test
     public void shouldNotFinishAndPass() {
         //given
         //when
-        LABORATORY_EXAMINATION.setStatus(LaboratoryExamStatus.FINISHED);
-        LaboratoryExamination actual = examinationService.finish(LABORATORY_EXAMINATION.getId(), ASSISTANT_CLOSURE_DTO);
+        laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
+        LaboratoryExamination actual = examinationService.finish(laboratoryExamination.getId(), assistantClosureDto);
         //then
         assertThat(actual.getStatus()).isEqualTo(LaboratoryExamStatus.FINISHED);
-        verify(laboratoryExaminationRepository, never()).save(LABORATORY_EXAMINATION);
+        verify(laboratoryExaminationRepository, never()).save(laboratoryExamination);
     }
 
     @Test
@@ -233,8 +219,8 @@ public class DefaultExaminationServiceTest {
 
         for (LaboratoryExamStatus status : statuses) {
             try {
-                LABORATORY_EXAMINATION.setStatus(status);
-                examinationService.finish(LABORATORY_EXAMINATION.getId(), ASSISTANT_CLOSURE_DTO);
+                laboratoryExamination.setStatus(status);
+                examinationService.finish(laboratoryExamination.getId(), assistantClosureDto);
                 fail("Should throw exception when finishing examination with wrong status");
             } catch (BadRequestException e) {
                 //expect exception
@@ -246,7 +232,7 @@ public class DefaultExaminationServiceTest {
     public void shouldThrowWhenExaminationIdIsWrongWhileFinishing() {
         //given
         //when
-        examinationService.finish(NOT_EXISTING_LABORATORY_EXAMINATION_ID, ASSISTANT_CLOSURE_DTO);
+        examinationService.finish(NOT_EXISTING_LABORATORY_EXAMINATION_ID, assistantClosureDto);
         //then
         //expect exception
     }
@@ -255,8 +241,8 @@ public class DefaultExaminationServiceTest {
     public void shouldThrowWhenAssistantIdIsWrongWhileFinishing() {
         //given
         //when
-        ASSISTANT_CLOSURE_DTO.setAssistantId(NOT_EXISTING_ASSISTANT_ID);
-        examinationService.finish(LABORATORY_EXAMINATION.getId(), ASSISTANT_CLOSURE_DTO);
+        assistantClosureDto.setAssistantId(NOT_EXISTING_ASSISTANT_ID);
+        examinationService.finish(laboratoryExamination.getId(), assistantClosureDto);
         //then
         //expect exception
     }
@@ -265,20 +251,20 @@ public class DefaultExaminationServiceTest {
     public void shouldCancelExamination() {
         //given
         //when
-        LaboratoryExamination actual = examinationService.cancel(LABORATORY_EXAMINATION.getId(), ASSISTANT_CLOSURE_DTO);
+        LaboratoryExamination actual = examinationService.cancel(laboratoryExamination.getId(), assistantClosureDto);
         //then
         assertThat(actual.getStatus()).isEqualTo(LaboratoryExamStatus.CANCELED);
-        verify(laboratoryExaminationRepository).save(LABORATORY_EXAMINATION);
+        verify(laboratoryExaminationRepository).save(laboratoryExamination);
     }
 
     @Test
     public void shouldNotCancelExaminationButPass() {
         //given
         //when
-        LaboratoryExamination actual = examinationService.cancel(LABORATORY_EXAMINATION.getId(), ASSISTANT_CLOSURE_DTO);
+        LaboratoryExamination actual = examinationService.cancel(laboratoryExamination.getId(), assistantClosureDto);
         //then
         assertThat(actual.getStatus()).isEqualTo(LaboratoryExamStatus.CANCELED);
-        verify(laboratoryExaminationRepository, never()).save(LABORATORY_EXAMINATION);
+        verify(laboratoryExaminationRepository, never()).save(laboratoryExamination);
     }
 
     @Test
@@ -288,8 +274,8 @@ public class DefaultExaminationServiceTest {
 
         for (LaboratoryExamStatus status : statuses) {
             try {
-                LABORATORY_EXAMINATION.setStatus(status);
-                examinationService.cancel(LABORATORY_EXAMINATION.getId(), ASSISTANT_CLOSURE_DTO);
+                laboratoryExamination.setStatus(status);
+                examinationService.cancel(laboratoryExamination.getId(), assistantClosureDto);
                 fail("Should throw exception when canceling examination with wrong status");
             } catch (BadRequestException e) {
                 //expect exception
@@ -301,7 +287,7 @@ public class DefaultExaminationServiceTest {
     public void shouldThrowWhenExaminationIdIsWrongWhileCanceling() {
         //given
         //when
-        examinationService.cancel(NOT_EXISTING_LABORATORY_EXAMINATION_ID, ASSISTANT_CLOSURE_DTO);
+        examinationService.cancel(NOT_EXISTING_LABORATORY_EXAMINATION_ID, assistantClosureDto);
         //then
         //expect exception
     }
@@ -310,8 +296,8 @@ public class DefaultExaminationServiceTest {
     public void shouldThrowWhenAssistantIdIsWrongWhileCanceling() {
         //given
         //when
-        ASSISTANT_CLOSURE_DTO.setAssistantId(NOT_EXISTING_ASSISTANT_ID);
-        examinationService.cancel(LABORATORY_EXAMINATION.getId(), ASSISTANT_CLOSURE_DTO);
+        assistantClosureDto.setAssistantId(NOT_EXISTING_ASSISTANT_ID);
+        examinationService.cancel(laboratoryExamination.getId(), assistantClosureDto);
         //then
         //expect exception
     }
@@ -319,24 +305,24 @@ public class DefaultExaminationServiceTest {
     @Test
     public void shouldRejectExamination() {
         //given
-        LABORATORY_EXAMINATION.setStatus(LaboratoryExamStatus.FINISHED);
+        laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
         //when
-        LaboratoryExamination actual = examinationService.reject(LABORATORY_EXAMINATION.getId(), SUPERVISOR_CLOSURE_DTO);
+        LaboratoryExamination actual = examinationService.reject(laboratoryExamination.getId(), supervisorClosureDto);
         //then
-        assertThat(actual.getSupervisorNote()).isEqualTo(SUPERVISOR_CLOSURE_DTO.getSupervisorNote());
+        assertThat(actual.getSupervisorNote()).isEqualTo(supervisorClosureDto.getSupervisorNote());
         assertThat(actual.getStatus()).isEqualTo(LaboratoryExamStatus.REJECTED);
-        verify(laboratoryExaminationRepository).save(LABORATORY_EXAMINATION);
+        verify(laboratoryExaminationRepository).save(laboratoryExamination);
     }
 
     @Test
     public void shouldNotRejectButPass() {
         //given
-        LABORATORY_EXAMINATION.setStatus(LaboratoryExamStatus.FINISHED);
+        laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
         //when
-        LaboratoryExamination actual = examinationService.reject(LABORATORY_EXAMINATION.getId(), SUPERVISOR_CLOSURE_DTO);
+        LaboratoryExamination actual = examinationService.reject(laboratoryExamination.getId(), supervisorClosureDto);
         //then
         assertThat(actual.getStatus()).isEqualTo(LaboratoryExamStatus.REJECTED);
-        verify(laboratoryExaminationRepository, never()).save(LABORATORY_EXAMINATION);
+        verify(laboratoryExaminationRepository, never()).save(laboratoryExamination);
     }
 
     @Test
@@ -346,8 +332,8 @@ public class DefaultExaminationServiceTest {
 
         for (LaboratoryExamStatus status : statuses) {
             try {
-                LABORATORY_EXAMINATION.setStatus(status);
-                examinationService.reject(LABORATORY_EXAMINATION.getId(), SUPERVISOR_CLOSURE_DTO);
+                laboratoryExamination.setStatus(status);
+                examinationService.reject(laboratoryExamination.getId(), supervisorClosureDto);
                 fail("Should throw exception when rejecting examination with wrong status");
             } catch (BadRequestException e) {
                 //expect exception
@@ -358,10 +344,10 @@ public class DefaultExaminationServiceTest {
     @Test(expected = BadRequestException.class)
     public void shouldThrowWhenSupervisorIdIsWrongWhileRejecting() {
         //given
-        LABORATORY_EXAMINATION.setStatus(LaboratoryExamStatus.FINISHED);
+        laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
         //when
-        SUPERVISOR_CLOSURE_DTO.setSupervisorId(NOT_EXISTING_SUPERVISOR_ID);
-        examinationService.reject(LABORATORY_EXAMINATION.getId(), SUPERVISOR_CLOSURE_DTO);
+        supervisorClosureDto.setSupervisorId(NOT_EXISTING_SUPERVISOR_ID);
+        examinationService.reject(laboratoryExamination.getId(), supervisorClosureDto);
         //then
         //expect exception
     }
@@ -369,9 +355,9 @@ public class DefaultExaminationServiceTest {
     @Test(expected = BadRequestException.class)
     public void shouldThrowWhenExaminationIdIsWrongWhileRejecting() {
         //given
-        LABORATORY_EXAMINATION.setStatus(LaboratoryExamStatus.FINISHED);
+        laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
         //when
-        examinationService.reject(NOT_EXISTING_LABORATORY_EXAMINATION_ID, SUPERVISOR_CLOSURE_DTO);
+        examinationService.reject(NOT_EXISTING_LABORATORY_EXAMINATION_ID, supervisorClosureDto);
         //then
         //expect exception
     }
@@ -379,25 +365,25 @@ public class DefaultExaminationServiceTest {
     @Test
     public void shouldApproveExamination() {
         //given
-        LABORATORY_EXAMINATION.setStatus(LaboratoryExamStatus.FINISHED);
+        laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
         //when
-        LaboratoryExamination actual = examinationService.approve(LABORATORY_EXAMINATION.getId(),
-                SUPERVISOR_CLOSURE_DTO.getSupervisorId());
+        LaboratoryExamination actual = examinationService.approve(laboratoryExamination.getId(),
+                supervisorClosureDto.getSupervisorId());
         //then
         assertThat(actual.getStatus()).isEqualTo(LaboratoryExamStatus.APPROVED);
-        verify(laboratoryExaminationRepository).save(LABORATORY_EXAMINATION);
+        verify(laboratoryExaminationRepository).save(laboratoryExamination);
     }
 
     @Test
     public void shouldNotApproveButPass() {
         //given
-        LABORATORY_EXAMINATION.setStatus(LaboratoryExamStatus.APPROVED);
+        laboratoryExamination.setStatus(LaboratoryExamStatus.APPROVED);
         //when
-        LaboratoryExamination actual = examinationService.approve(LABORATORY_EXAMINATION.getId(),
-                SUPERVISOR_CLOSURE_DTO.getSupervisorId());
+        LaboratoryExamination actual = examinationService.approve(laboratoryExamination.getId(),
+                supervisorClosureDto.getSupervisorId());
         //then
         assertThat(actual.getStatus()).isEqualTo(LaboratoryExamStatus.APPROVED);
-        verify(laboratoryExaminationRepository, never()).save(LABORATORY_EXAMINATION);
+        verify(laboratoryExaminationRepository, never()).save(laboratoryExamination);
 
     }
 
@@ -408,8 +394,8 @@ public class DefaultExaminationServiceTest {
 
         for (LaboratoryExamStatus status : statuses) {
             try {
-                LABORATORY_EXAMINATION.setStatus(status);
-                examinationService.approve(LABORATORY_EXAMINATION.getId(), SUPERVISOR_CLOSURE_DTO.getSupervisorId());
+                laboratoryExamination.setStatus(status);
+                examinationService.approve(laboratoryExamination.getId(), supervisorClosureDto.getSupervisorId());
                 fail("Should throw exception when approving examination with wrong status");
             } catch (BadRequestException e) {
                 //expect exception
@@ -420,9 +406,9 @@ public class DefaultExaminationServiceTest {
     @Test(expected = BadRequestException.class)
     public void shouldThrowWhenExaminationIdIsWrongWhileApproving() {
         //given
-        LABORATORY_EXAMINATION.setStatus(LaboratoryExamStatus.FINISHED);
+        laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
         //when
-        examinationService.approve(NOT_EXISTING_LABORATORY_EXAMINATION_ID, SUPERVISOR_CLOSURE_DTO.getSupervisorId());
+        examinationService.approve(NOT_EXISTING_LABORATORY_EXAMINATION_ID, supervisorClosureDto.getSupervisorId());
         //then
         //expect exception
     }
@@ -430,9 +416,9 @@ public class DefaultExaminationServiceTest {
     @Test(expected = BadRequestException.class)
     public void shouldThrowWhenSupervisorIdIsWrongWhileApproving() {
         //given
-        LABORATORY_EXAMINATION.setStatus(LaboratoryExamStatus.FINISHED);
+        laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
         //when
-        examinationService.approve(LABORATORY_EXAMINATION.getId(), NOT_EXISTING_SUPERVISOR_ID);
+        examinationService.approve(laboratoryExamination.getId(), NOT_EXISTING_SUPERVISOR_ID);
         //then
         //expect exception
     }
@@ -440,11 +426,11 @@ public class DefaultExaminationServiceTest {
     @Test
     public void shouldGetAllLaboratoryExaminations() {
         //given
-        List<LaboratoryExamination> laboratoryExaminations = Lists.newArrayList(LABORATORY_EXAMINATION,
-                LABORATORY_EXAMINATION, LABORATORY_EXAMINATION);
-        given(laboratoryExaminationRepository.findAllByVisit_Id(VISIT.getId())).willReturn(laboratoryExaminations);
+        List<LaboratoryExamination> laboratoryExaminations = Lists.newArrayList(laboratoryExamination,
+                laboratoryExamination, laboratoryExamination);
+        given(laboratoryExaminationRepository.findAllByVisit_Id(visit.getId())).willReturn(laboratoryExaminations);
         //when
-        List<LaboratoryExamination> retrieved = examinationService.getAllLaboratoryExaminationsByVisit(VISIT.getId());
+        List<LaboratoryExamination> retrieved = examinationService.getAllLaboratoryExaminationsByVisit(visit.getId());
         //then
         assertThat(retrieved).containsExactlyElementsOf(laboratoryExaminations);
     }
@@ -452,11 +438,9 @@ public class DefaultExaminationServiceTest {
     @Test
     public void shouldGetZeroLaboratoryExaminations() {
         //given
-        given(laboratoryExaminationRepository.findAllByVisit_Id(NOT_EXISTING_VISIT_ID))
-                .willReturn(Lists.newArrayList());
+        given(laboratoryExaminationRepository.findAllByVisit_Id(NOT_EXISTING_VISIT_ID)).willReturn(Lists.newArrayList());
         //when
-        List<LaboratoryExamination> retrieved = examinationService
-                .getAllLaboratoryExaminationsByVisit(NOT_EXISTING_VISIT_ID);
+        List<LaboratoryExamination> retrieved = examinationService.getAllLaboratoryExaminationsByVisit(NOT_EXISTING_VISIT_ID);
         //then
         assertThat(retrieved).isEmpty();
     }
@@ -464,11 +448,11 @@ public class DefaultExaminationServiceTest {
     @Test
     public void shouldGetAllPhysicalExaminations() {
         //given
-        List<PhysicalExamination> physicalExaminations = Lists.newArrayList(PHYSICAL_EXAMINATION,
-                PHYSICAL_EXAMINATION, PHYSICAL_EXAMINATION);
-        given(physicalExaminationRepository.findAllByVisit_Id(VISIT.getId())).willReturn(physicalExaminations);
+        List<PhysicalExamination> physicalExaminations = Lists.newArrayList(physicalExamination, physicalExamination,
+                physicalExamination);
+        given(physicalExaminationRepository.findAllByVisit_Id(visit.getId())).willReturn(physicalExaminations);
         //when
-        List<PhysicalExamination> retrieved = examinationService.getAllPhysicalExaminationsByVisit(VISIT.getId());
+        List<PhysicalExamination> retrieved = examinationService.getAllPhysicalExaminationsByVisit(visit.getId());
         //then
         assertThat(retrieved).containsExactlyElementsOf(physicalExaminations);
     }
@@ -476,11 +460,9 @@ public class DefaultExaminationServiceTest {
     @Test
     public void shouldGetZeroPhysicalExaminations() {
         //given
-        given(physicalExaminationRepository.findAllByVisit_Id(NOT_EXISTING_VISIT_ID))
-                .willReturn(Lists.newArrayList());
+        given(physicalExaminationRepository.findAllByVisit_Id(NOT_EXISTING_VISIT_ID)).willReturn(Lists.newArrayList());
         //when
-        List<PhysicalExamination> retrieved = examinationService
-                .getAllPhysicalExaminationsByVisit(NOT_EXISTING_VISIT_ID);
+        List<PhysicalExamination> retrieved = examinationService.getAllPhysicalExaminationsByVisit(NOT_EXISTING_VISIT_ID);
         //then
         assertThat(retrieved).isEmpty();
     }
