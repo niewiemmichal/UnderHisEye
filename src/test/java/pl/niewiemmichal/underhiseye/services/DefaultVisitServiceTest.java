@@ -273,14 +273,14 @@ public class DefaultVisitServiceTest
     public void shouldGetFatVisit() {
         //given
         given(examinationService.getAllLaboratoryExaminationsByVisit(VISIT.getId())).willReturn(Lists.newArrayList(
-                new LaboratoryExamination(),
-                new LaboratoryExamination(),
-                new LaboratoryExamination()
+                new LaboratoryExamination(LaboratoryExamStatus.CANCELED, new Examination("name", "code"), VISIT),
+                new LaboratoryExamination(LaboratoryExamStatus.CANCELED, new Examination("name", "code"), VISIT),
+                new LaboratoryExamination(LaboratoryExamStatus.CANCELED, new Examination("name", "code"), VISIT)
         ));
         given(examinationService.getAllPhysicalExaminationsByVisit(VISIT.getId())).willReturn(Lists.newArrayList(
-                new PhysicalExamination(),
-                new PhysicalExamination(),
-                new PhysicalExamination()
+                new PhysicalExamination("result", new Examination("name", "code"), VISIT),
+                new PhysicalExamination("result", new Examination("name", "code"), VISIT),
+                new PhysicalExamination("result", new Examination("name", "code"), VISIT)
         ));
         //when
         VisitWithExaminationsDto actual = visitService.getFatVisit(VISIT.getId());

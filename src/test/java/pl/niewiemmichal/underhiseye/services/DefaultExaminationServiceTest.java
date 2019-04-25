@@ -51,7 +51,7 @@ public class DefaultExaminationServiceTest {
     private static final Long NOT_EXISTING_ASSISTANT_ID = 101L;
     private static final Long NOT_EXISTING_SUPERVISOR_ID = 202L;
 
-    private Examination examination = new Examination("name0");
+    private Examination examination = new Examination("code0", "name0");
     private Doctor doctor = new Doctor("Existing", "Doctor", "123");
     private Address patientAddress = new Address("City", "Street", "HN");
     private Patient patient = new Patient("Existing", "Patient", "123", patientAddress);
@@ -81,7 +81,6 @@ public class DefaultExaminationServiceTest {
         visit.setId(10L);
         assistant.setId(100L);
         supervisor.setId(200L);
-        examination.setCode("code0");
         laboratoryExamination.setId(1000L);
         physicalExamination.setId(2000L);
         supervisorClosureDto.setSupervisorNote("note");

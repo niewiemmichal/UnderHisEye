@@ -8,6 +8,7 @@ import pl.niewiemmichal.underhiseye.entities.Visit;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Getter
 public class VisitWithExaminationsDto {
     @NonNull
     private final Visit visit;
