@@ -46,6 +46,9 @@ public class DefaultExaminationServiceTest {
     @MockBean
     private LaboratorySupervisorRepository laboratorySupervisorRepository;
 
+    @MockBean
+    private VisitRepository visitRepository;
+
     @Autowired
     private DefaultExaminationService examinationService;
 
@@ -91,11 +94,13 @@ public class DefaultExaminationServiceTest {
         physicalExaminationDto = new PhysicalExaminationDto(physicalExamination.getResult(),
                 physicalExamination.getExamination().getCode(), visit.getId());
 
-        laboratoryExaminationDto =
-                new LaboratoryExaminationDto(laboratoryExamination.getExamination().getCode(), visit.getId());
-
+        laboratoryExaminationDto = new LaboratoryExaminationDto(laboratoryExamination.getExamination().getCode(), visit.getId());
         laboratoryExaminationDto.setNote("note");
 
+        //visit REPOSITORY MOCKS
+        given(visitRepository.findById(visit.getId())).willReturn(Optional.of(visit));
+        given(visitRepository.findById(NOT_EXISTING_VISIT_ID)).willReturn(Optional.empty());
+        given(visitRepository.save(visit)).willReturn(visit);
 
         //examination REPOSITORY MOCKS
         given(examinationRepository.findById(examination.getCode()))
@@ -147,6 +152,7 @@ public class DefaultExaminationServiceTest {
 
 
         //given
+        laboratoryExamination.setNote("note");
         List<LaboratoryExaminationDto> laboratoryExaminations = Lists.newArrayList(laboratoryExaminationDto,
                 laboratoryExaminationDto, laboratoryExaminationDto);
 
@@ -270,6 +276,7 @@ public class DefaultExaminationServiceTest {
     @Test
     public void shouldNotCancelExaminationButPass() {
         //given
+        laboratoryExamination.setStatus(LaboratoryExamStatus.CANCELED);
         //when
         LaboratoryExamination actual = examinationService.cancel(laboratoryExamination.getId(), assistantClosureDto);
         //then
@@ -327,7 +334,7 @@ public class DefaultExaminationServiceTest {
     @Test
     public void shouldNotRejectButPass() {
         //given
-        laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
+        laboratoryExamination.setStatus(LaboratoryExamStatus.REJECTED);
         //when
         LaboratoryExamination actual = examinationService.reject(laboratoryExamination.getId(), supervisorClosureDto);
         //then

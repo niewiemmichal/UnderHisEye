@@ -31,4 +31,8 @@ public interface ExaminationMapper {
     @Mapping(target = "supervisor", source = "supervisorId")
     @Mapping(target = "approvalDate", expression = "java(java.time.LocalDate.now())")
     LaboratoryExamination toEntity(SupervisorClosureDto dto, @MappingTarget LaboratoryExamination examination);
+
+    @Mapping(target = "supervisor", source = "supervisorId")
+    @Mapping(target = "approvalDate", expression = "java(java.time.LocalDate.now())")
+    LaboratoryExamination toEntity(Long supervisorId, @MappingTarget LaboratoryExamination examination);
 }
