@@ -35,6 +35,6 @@ public class Patient {
 
     @NonNull
     @JoinColumn(nullable = false)
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Address address;
 }

@@ -2,10 +2,8 @@ package pl.niewiemmichal.underhiseye.entities;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -36,4 +34,7 @@ public class Doctor {
     @Size(min = 7, max = 7)
     private String gmcNumber;
 
+    @Valid
+    @OneToOne(cascade = CascadeType.ALL)
+    private User user;
 }

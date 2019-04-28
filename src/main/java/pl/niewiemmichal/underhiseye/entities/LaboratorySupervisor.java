@@ -2,10 +2,8 @@ package pl.niewiemmichal.underhiseye.entities;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -30,4 +28,7 @@ public class LaboratorySupervisor {
     @Size(max = 50)
     private String surname;
 
+    @Valid
+    @OneToOne(cascade = CascadeType.ALL)
+    private User user;
 }

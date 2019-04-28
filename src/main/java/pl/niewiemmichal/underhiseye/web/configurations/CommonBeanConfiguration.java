@@ -30,5 +30,4 @@ public class CommonBeanConfiguration {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder(11);
     }
-
 }

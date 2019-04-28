@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.niewiemmichal.underhiseye.commons.annotations.IsAdministrator;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 import pl.niewiemmichal.underhiseye.entities.Examination;
 import pl.niewiemmichal.underhiseye.repositories.ExaminationRepository;
@@ -23,14 +24,14 @@ public class IcdEndpoint {
         this.examinationRepository = examinationRepository;
     }
 
-    @RolesAllowed({"DOCTOR", "REGISTRANT"})
+    @IsAdministrator
     @GetMapping("{code}")
     public Examination getExamination(@PathVariable String code){
         return examinationRepository.findById(code).orElseThrow(()
                 -> new ResourceDoesNotExistException("Examination","id",code));
     }
 
-    @RolesAllowed({"DOCTOR"})
+    @IsAdministrator
     @GetMapping
     public List<Examination> getAllExaminations(){
         return examinationRepository.findAll();

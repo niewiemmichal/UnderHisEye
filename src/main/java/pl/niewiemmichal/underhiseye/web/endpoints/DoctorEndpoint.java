@@ -1,4 +1,6 @@
 package pl.niewiemmichal.underhiseye.web.endpoints;
+import pl.niewiemmichal.underhiseye.commons.annotations.IsAdministrator;
+import pl.niewiemmichal.underhiseye.commons.annotations.IsDoctor;
 import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 
@@ -18,35 +20,23 @@ public class DoctorEndpoint {
         this.doctorRepository = doctorRepository;
     }
 
+    @IsAdministrator @IsDoctor
     @GetMapping("/{id}")
     public Doctor getDoctor(@PathVariable Long id){
         return doctorRepository.findById(id).orElseThrow(() ->
-                new ResourceDoesNotExistException("Doctor","id",id.toString()));
+                new ResourceDoesNotExistException("Doctor", "id", id.toString()));
     }
 
+    @IsAdministrator
     @GetMapping
     public List<Doctor> getAllDoctors(){
         return  doctorRepository.findAll();
     }
 
+    @IsAdministrator
     @PostMapping
     public Doctor addDoctor(@RequestBody Doctor newDoctor){
         if(newDoctor.getId() != null) throw new BadRequestException();
         return doctorRepository.save(newDoctor);
-    }
-
-    @PutMapping("/{id}")
-    public Doctor updateDoctor(@RequestBody Doctor newDoctor, @PathVariable Long id){
-        return doctorRepository.findById(id)
-                .map(doctor -> {
-                    doctor.setName(newDoctor.getName());
-                    doctor.setSurname(newDoctor.getSurname());
-                    doctor.setGmcNumber(newDoctor.getGmcNumber());
-                    return doctorRepository.save(doctor);
-                })
-                .orElseGet(() -> {
-                    newDoctor.setId(id);
-                    return doctorRepository.save(newDoctor);
-                });
     }
 }

@@ -50,11 +50,9 @@ public class LaboratoryExamination {
     @ManyToOne
     private Examination examination;
 
-    @JoinColumn(nullable = false)
     @ManyToOne
     private LaboratorySupervisor supervisor;
 
-    @JoinColumn(nullable = false)
     @ManyToOne
     private LaboratoryAssistant assistant;
 

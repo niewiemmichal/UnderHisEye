@@ -2,10 +2,12 @@ package pl.niewiemmichal.underhiseye.entities;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -19,18 +21,28 @@ public class User implements UserDetails {
 
     @Id
     @NonNull
+    @Column(length = 64)
     private final String username;
 
+    @Setter
     @NonNull
-    private final String password;
+    private String password;
 
     @ElementCollection
     @NonNull
-    private final Set<Role> role;
+    private final Set<Role> roles;
+
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.stream().map(r -> new SimpleGrantedAuthority(role.toString())).collect(Collectors.toSet());
+        return roles.stream().map(r -> new SimpleGrantedAuthority(roles.toString())).collect(Collectors.toSet());
     }
 
     @Override
