@@ -12,7 +12,7 @@ import pl.niewiemmichal.underhiseye.repositories.LaboratorySupervisorRepository;
 import java.util.List;
 
 @Controller
-@RequestMapping("laboratorySupervisors")
+@RequestMapping("supervisors")
 @ResponseBody
 public class LaboratorySupervisorEndpoint {
 

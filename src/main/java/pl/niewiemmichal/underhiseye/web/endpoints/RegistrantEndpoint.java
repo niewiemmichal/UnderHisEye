@@ -13,7 +13,7 @@ import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @Controller
-@RequestMapping("patientRegistrationSpecialist")
+@RequestMapping("registrants")
 @ResponseBody
 public class RegistrantEndpoint {
 

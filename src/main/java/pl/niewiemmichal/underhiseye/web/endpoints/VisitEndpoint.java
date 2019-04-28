@@ -2,6 +2,8 @@ package pl.niewiemmichal.underhiseye.web.endpoints;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.niewiemmichal.underhiseye.commons.annotations.IsDoctor;
+import pl.niewiemmichal.underhiseye.commons.annotations.IsRegistrant;
 import pl.niewiemmichal.underhiseye.commons.annotations.IsVisitViewer;
 import pl.niewiemmichal.underhiseye.commons.dto.VisitClosureDto;
 import pl.niewiemmichal.underhiseye.commons.dto.VisitRegistrationDto;
@@ -42,7 +44,7 @@ public class VisitEndpoint {
         return visitService.getFatVisit(id);
     }
 
-    @IsVisitViewer
+    @IsRegistrant
     @PostMapping
     public Visit registerVisit(@Valid @RequestBody VisitRegistrationDto dto){
         return visitService.register(dto);
@@ -54,7 +56,7 @@ public class VisitEndpoint {
         visitService.cancel(id, reason);
     }
 
-    @IsVisitViewer
+    @IsDoctor
     @PatchMapping("/end/{id}")
     public void endVisit(@PathVariable Long id, @Valid @RequestBody VisitClosureDto dto) {
         visitService.end(id, dto);
