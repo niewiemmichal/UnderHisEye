@@ -404,7 +404,7 @@ public class DefaultExaminationServiceTest {
 
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void shouldNotApproveAndThrow() {
         LaboratoryExamStatus statuses[] = {LaboratoryExamStatus.ORDERED, LaboratoryExamStatus.REJECTED,
                 LaboratoryExamStatus.CANCELED};
