@@ -16,6 +16,7 @@ import pl.niewiemmichal.underhiseye.repositories.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DefaultExaminationService implements ExaminationService {
@@ -51,52 +52,38 @@ public class DefaultExaminationService implements ExaminationService {
 
         List<PhysicalExamination> physicalExaminationList = new ArrayList<>();
 
-        if ( physicalExaminations == null ) {
-            return physicalExaminationList;
-        }
-
         try {
-            for(PhysicalExaminationDto physicalExaminationDto : physicalExaminations)
-            {
-                PhysicalExamination physicalExamination = examinationMapper.toEntity(physicalExaminationDto);
-                physicalExaminationList.add(physicalExamination);
-            }
-            physicalExaminationRepository.saveAll(physicalExaminationList);
-            return physicalExaminationList;
+            physicalExaminationList = physicalExaminations.stream().map(examinationMapper::toEntity).collect(Collectors.toList());
+
         }catch (ResourceDoesNotExistException e)
         {
             throw new BadRequestException(e.getResource(), e.getField(), e.getValue(), " does not exist");
         }
+
+        physicalExaminationRepository.saveAll(physicalExaminationList);
+        return physicalExaminationList;
     }
 
     @Override
-    public List<LaboratoryExamination> createLaboratoryExaminations(List<LaboratoryExaminationDto> laboratoryExaminations) {
+    public List<LaboratoryExamination> createLaboratoryExaminations(@NonNull List<LaboratoryExaminationDto> laboratoryExaminations) {
 
         List<LaboratoryExamination> laboratoryExaminationList = new ArrayList<>();
 
-        if ( laboratoryExaminations == null ) {
-            return laboratoryExaminationList;
-        }
-
         try {
-        for(LaboratoryExaminationDto laboratoryExaminationDto : laboratoryExaminations)
-        {
-            LaboratoryExamination laboratoryExamination = examinationMapper.toEntity(laboratoryExaminationDto);
-            laboratoryExaminationList.add(laboratoryExamination);
-        }
-        laboratoryExaminationRepository.saveAll(laboratoryExaminationList);
-        return laboratoryExaminationList;
+            laboratoryExaminationList = laboratoryExaminations.stream().map(examinationMapper::toEntity).collect(Collectors.toList());
         }catch (ResourceDoesNotExistException e)
         {
             throw new BadRequestException(e.getResource(), e.getField(), e.getValue(), " does not exist");
         }
+
+        laboratoryExaminationRepository.saveAll(laboratoryExaminationList);
+        return laboratoryExaminationList;
     }
 
     @Override
-    public LaboratoryExamination finish(Long id, AssistantClosureDto assistantClosureDto) {
+    public LaboratoryExamination finish(@NonNull Long id, @NonNull AssistantClosureDto assistantClosureDto) {
 
-        LaboratoryExamination laboratoryExamination;
-        laboratoryExamination = laboratoryExaminationRepository.findById(id).orElseThrow(()
+        LaboratoryExamination laboratoryExamination = laboratoryExaminationRepository.findById(id).orElseThrow(()
                 -> new BadRequestException("LaboratoryExamination", "id", id.toString(), " does not exist"));
 
         try{
@@ -108,7 +95,7 @@ public class DefaultExaminationService implements ExaminationService {
         if(laboratoryExamination.getStatus()!=LaboratoryExamStatus.FINISHED) {
             if(laboratoryExamination.getStatus()!=LaboratoryExamStatus.ORDERED)
                 throw new BadRequestException("LaboratoryExamination", "status",
-                        laboratoryExamination.getStatus().toString(), " should equals ORDERED");
+                        laboratoryExamination.getStatus().toString(), " should equal ORDERED");
             laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
             laboratoryExaminationRepository.save(laboratoryExamination);
         }
@@ -116,10 +103,9 @@ public class DefaultExaminationService implements ExaminationService {
     }
 
     @Override
-    public LaboratoryExamination cancel(Long id, AssistantClosureDto assistantClosureDto)
+    public LaboratoryExamination cancel(@NonNull Long id, @NonNull AssistantClosureDto assistantClosureDto)
     {
-        LaboratoryExamination laboratoryExamination;
-        laboratoryExamination = laboratoryExaminationRepository.findById(id).orElseThrow(()
+        LaboratoryExamination laboratoryExamination = laboratoryExaminationRepository.findById(id).orElseThrow(()
                 -> new BadRequestException("LaboratoryExamination", "id", id.toString(), " does not exist"));
 
         try{
@@ -131,7 +117,7 @@ public class DefaultExaminationService implements ExaminationService {
         if(laboratoryExamination.getStatus()!=LaboratoryExamStatus.CANCELED) {
             if(laboratoryExamination.getStatus()!=LaboratoryExamStatus.ORDERED)
                 throw new BadRequestException("LaboratoryExamination", "status",
-                        laboratoryExamination.getStatus().toString(), " should equals ORDERED");
+                        laboratoryExamination.getStatus().toString(), " should equal ORDERED");
             laboratoryExamination.setStatus(LaboratoryExamStatus.CANCELED);
             laboratoryExaminationRepository.save(laboratoryExamination);
         }
@@ -139,10 +125,9 @@ public class DefaultExaminationService implements ExaminationService {
     }
 
     @Override
-    public LaboratoryExamination reject(Long id, SupervisorClosureDto supervisorClosureDto) {
+    public LaboratoryExamination reject(@NonNull Long id, @NonNull SupervisorClosureDto supervisorClosureDto) {
 
-        LaboratoryExamination laboratoryExamination;
-        laboratoryExamination = laboratoryExaminationRepository.findById(id).orElseThrow(()
+        LaboratoryExamination laboratoryExamination = laboratoryExaminationRepository.findById(id).orElseThrow(()
                 -> new BadRequestException("LaboratoryExamination", "id", id.toString(), " does not exist"));
 
         try{
@@ -154,7 +139,7 @@ public class DefaultExaminationService implements ExaminationService {
         if(laboratoryExamination.getStatus()!=LaboratoryExamStatus.REJECTED) {
             if(laboratoryExamination.getStatus()!=LaboratoryExamStatus.FINISHED)
                 throw new BadRequestException("LaboratoryExamination", "status",
-                        laboratoryExamination.getStatus().toString(), "should equals FINISHED");
+                        laboratoryExamination.getStatus().toString(), "should equal FINISHED");
             laboratoryExamination.setStatus(LaboratoryExamStatus.REJECTED);
             laboratoryExaminationRepository.save(laboratoryExamination);
         }
@@ -162,10 +147,9 @@ public class DefaultExaminationService implements ExaminationService {
     }
 
     @Override
-    public LaboratoryExamination approve(Long id, Long supervisorId) {
+    public LaboratoryExamination approve(@NonNull Long id,@NonNull Long supervisorId) {
 
-        LaboratoryExamination laboratoryExamination;
-        laboratoryExamination = laboratoryExaminationRepository.findById(id).orElseThrow(()
+        LaboratoryExamination laboratoryExamination = laboratoryExaminationRepository.findById(id).orElseThrow(()
                 -> new BadRequestException("LaboratoryExamination", "id", id.toString(), " does not exist"));
 
         try{
@@ -178,7 +162,7 @@ public class DefaultExaminationService implements ExaminationService {
 
             if(laboratoryExamination.getStatus()!=LaboratoryExamStatus.FINISHED)
                 throw new BadRequestException("LaboratoryExamination", "status",
-                        laboratoryExamination.getStatus().toString(), "should equals FINISHED");
+                        laboratoryExamination.getStatus().toString(), "should equal FINISHED");
 
             laboratoryExamination.setStatus(LaboratoryExamStatus.APPROVED);
             laboratoryExaminationRepository.save(laboratoryExamination);
@@ -187,13 +171,13 @@ public class DefaultExaminationService implements ExaminationService {
     }
 
     @Override
-    public List<LaboratoryExamination> getAllLaboratoryExaminationsByVisit(Long visitId)
+    public List<LaboratoryExamination> getAllLaboratoryExaminationsByVisit(@NonNull Long visitId)
     {
         return laboratoryExaminationRepository.findAllByVisit_Id(visitId);
     }
 
     @Override
-    public List<PhysicalExamination> getAllPhysicalExaminationsByVisit(Long visitId)
+    public List<PhysicalExamination> getAllPhysicalExaminationsByVisit(@NonNull Long visitId)
     {
         return physicalExaminationRepository.findAllByVisit_Id(visitId);
     }
