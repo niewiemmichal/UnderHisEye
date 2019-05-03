@@ -2,6 +2,7 @@ package pl.niewiemmichal.underhiseye.entities;
 
 import lombok.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;

@@ -1,6 +1,4 @@
 package pl.niewiemmichal.underhiseye.web.endpoints;
-import pl.niewiemmichal.underhiseye.commons.annotations.IsAdministrator;
-import pl.niewiemmichal.underhiseye.commons.annotations.IsDoctor;
 import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 
@@ -9,6 +7,8 @@ import pl.niewiemmichal.underhiseye.entities.Doctor;
 import pl.niewiemmichal.underhiseye.repositories.DoctorRepository;
 
 import java.util.List;
+
+import javax.annotation.security.RolesAllowed;
 
 @RequestMapping("doctors")
 @RestController
@@ -20,20 +20,20 @@ public class DoctorEndpoint {
         this.doctorRepository = doctorRepository;
     }
 
-    @IsAdministrator @IsDoctor
+    @RolesAllowed({"DOCTOR", "ADMINISTRATOR"})
     @GetMapping("/{id}")
     public Doctor getDoctor(@PathVariable Long id){
         return doctorRepository.findById(id).orElseThrow(() ->
                 new ResourceDoesNotExistException("Doctor", "id", id.toString()));
     }
 
-    @IsAdministrator
+    @RolesAllowed({"ADMINISTRATOR"})
     @GetMapping
     public List<Doctor> getAllDoctors(){
         return  doctorRepository.findAll();
     }
 
-    @IsAdministrator
+    @RolesAllowed({"ADMINISTRATOR"})
     @PostMapping
     public Doctor addDoctor(@RequestBody Doctor newDoctor){
         if(newDoctor.getId() != null) throw new BadRequestException();

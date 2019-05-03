@@ -2,17 +2,12 @@ package pl.niewiemmichal.underhiseye.web.endpoints;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pl.niewiemmichal.underhiseye.commons.annotations.IsAssistant;
-import pl.niewiemmichal.underhiseye.commons.annotations.IsDoctor;
-import pl.niewiemmichal.underhiseye.commons.annotations.IsSupervisor;
 import pl.niewiemmichal.underhiseye.commons.dto.AssistantClosureDto;
 import pl.niewiemmichal.underhiseye.commons.dto.SupervisorClosureDto;
-import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
-import pl.niewiemmichal.underhiseye.entities.Examination;
 import pl.niewiemmichal.underhiseye.entities.LaboratoryExamination;
-import pl.niewiemmichal.underhiseye.repositories.ExaminationRepository;
 import pl.niewiemmichal.underhiseye.services.ExaminationService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -27,25 +22,25 @@ public class ExaminationEndpoint {
         this.examinationService = examinationService;
     }
 
-    @IsAssistant
+    @RolesAllowed({"ASSISTANT"})
     @PatchMapping("/finish/{id}")
     public LaboratoryExamination finish(@PathVariable Long id, @Valid @RequestBody AssistantClosureDto closure) {
         return examinationService.finish(id, closure);
     }
 
-    @IsAssistant
+    @RolesAllowed({"ASSISTANT"})
     @PatchMapping("/cancel/{id}")
     public LaboratoryExamination cancel(@PathVariable Long id, @Valid @RequestBody AssistantClosureDto closure) {
         return examinationService.cancel(id, closure);
     }
 
-    @IsSupervisor
+    @RolesAllowed({"SUPERVISOR"})
     @PatchMapping("/reject/{id}")
     public LaboratoryExamination reject(@PathVariable Long id, @Valid @RequestBody SupervisorClosureDto closure) {
         return examinationService.reject(id, closure);
     }
 
-    @IsSupervisor
+    @RolesAllowed({"SUPERVISOR"})
     @PatchMapping("/approve/{id}")
     public LaboratoryExamination approve(@PathVariable Long id, @RequestParam Long supervisorId) {
         return examinationService.approve(id, supervisorId);
