@@ -29,20 +29,20 @@ public class ExaminationEndpoint {
 
     @IsAssistant
     @PatchMapping("/finish/{id}")
-    public LaboratoryExamination finish(@PathVariable Long id, @Valid @RequestBody AssistantClosureDto dto) {
-        return examinationService.finish(id, dto);
+    public LaboratoryExamination finish(@PathVariable Long id, @Valid @RequestBody AssistantClosureDto closure) {
+        return examinationService.finish(id, closure);
     }
 
     @IsAssistant
     @PatchMapping("/cancel/{id}")
-    public LaboratoryExamination cancel(@PathVariable Long id, @Valid @RequestBody AssistantClosureDto dto) {
-        return examinationService.cancel(id, dto);
+    public LaboratoryExamination cancel(@PathVariable Long id, @Valid @RequestBody AssistantClosureDto closure) {
+        return examinationService.cancel(id, closure);
     }
 
     @IsSupervisor
     @PatchMapping("/reject/{id}")
-    public LaboratoryExamination reject(@PathVariable Long id, @Valid @RequestBody SupervisorClosureDto dto) {
-        return examinationService.reject(id, dto);
+    public LaboratoryExamination reject(@PathVariable Long id, @Valid @RequestBody SupervisorClosureDto closure) {
+        return examinationService.reject(id, closure);
     }
 
     @IsSupervisor
