@@ -94,7 +94,7 @@ public class DefaultExaminationService implements ExaminationService {
         return physicalExaminationRepository.findAllByVisit_Id(visitId);
     }
 
-    private <t> LaboratoryExamination changeState(LaboratoryExamStatus newState, LaboratoryExamStatus currentState,
+    private LaboratoryExamination changeState(LaboratoryExamStatus newState, LaboratoryExamStatus currentState,
                                                         Supplier<LaboratoryExamination> toEntity) {
         LaboratoryExamination laboratoryExamination = wrapToEntity(toEntity);
 
