@@ -136,33 +136,35 @@ public class DefaultExaminationServiceTest {
         List<PhysicalExaminationDto> physicalExaminations = Lists.newArrayList(physicalExaminationDto,
                 physicalExaminationDto, physicalExaminationDto);
 
+        physicalExamination.setId(null);
+        List<PhysicalExamination> expected = Lists.newArrayList(physicalExamination, physicalExamination,
+                physicalExamination);
+        given(physicalExaminationRepository.saveAll(expected)).willReturn(expected);
+
         //when
         List<PhysicalExamination> created = examinationService.createPhysicalExaminations(physicalExaminations);
 
         //then
-        physicalExamination.setId(null);
-        List<PhysicalExamination> expected = Lists.newArrayList(physicalExamination, physicalExamination,
-                physicalExamination);
         assertThat(created).containsExactlyElementsOf(expected);
         verify(physicalExaminationRepository).saveAll(expected);
     }
 
     @Test
     public void shouldCreateLaboratoryExaminations() {
-
-
         //given
-        laboratoryExamination.setNote("note");
         List<LaboratoryExaminationDto> laboratoryExaminations = Lists.newArrayList(laboratoryExaminationDto,
                 laboratoryExaminationDto, laboratoryExaminationDto);
+
+        laboratoryExamination.setNote("note");
+        laboratoryExamination.setId(null);
+        List<LaboratoryExamination> expected = Lists.newArrayList(laboratoryExamination, laboratoryExamination,
+                laboratoryExamination);
+        given(laboratoryExaminationRepository.saveAll(expected)).willReturn(expected);
 
         //when
         List<LaboratoryExamination> created = examinationService.createLaboratoryExaminations(laboratoryExaminations);
 
         //then
-        laboratoryExamination.setId(null);
-        List<LaboratoryExamination> expected = Lists.newArrayList(laboratoryExamination, laboratoryExamination,
-                laboratoryExamination);
         assertThat(created).containsExactlyElementsOf(expected);
         verify(laboratoryExaminationRepository).saveAll(expected);
     }
