@@ -49,14 +49,14 @@ public class DefaultExaminationService implements ExaminationService {
     @Override
     public List<PhysicalExamination> createPhysicalExaminations(@NonNull List<PhysicalExaminationDto> physicalExaminations) {
         return physicalExaminationRepository.saveAll(physicalExaminations.stream()
-                .map(e -> badRequestWrapper(() -> examinationMapper.toEntity(e)))
+                .map(e -> wrapToEntity(() -> examinationMapper.toEntity(e)))
                 .collect(Collectors.toList()));
     }
 
     @Override
     public List<LaboratoryExamination> createLaboratoryExaminations(@NonNull List<LaboratoryExaminationDto> laboratoryExaminations) {
         return laboratoryExaminationRepository.saveAll(laboratoryExaminations.stream()
-                .map(e -> badRequestWrapper(() -> examinationMapper.toEntity(e)))
+                .map(e -> wrapToEntity(() -> examinationMapper.toEntity(e)))
                 .collect(Collectors.toList()));
     }
 
@@ -96,7 +96,7 @@ public class DefaultExaminationService implements ExaminationService {
 
     private <t> LaboratoryExamination changeState(LaboratoryExamStatus newState, LaboratoryExamStatus currentState,
                                                         Supplier<LaboratoryExamination> toEntity) {
-        LaboratoryExamination laboratoryExamination = badRequestWrapper(toEntity);
+        LaboratoryExamination laboratoryExamination = wrapToEntity(toEntity);
 
         if(laboratoryExamination.getStatus() != newState) {
             if(laboratoryExamination.getStatus() != currentState)
