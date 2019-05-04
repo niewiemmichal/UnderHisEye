@@ -109,7 +109,7 @@ public class DefaultExaminationService implements ExaminationService {
         return laboratoryExamination;
     }
 
-    private <T> T badRequestWrapper(Supplier<T> toEntity) {
+    private <T> T wrapToEntity(Supplier<T> toEntity) {
         try {
             return toEntity.get();
         } catch (ResourceDoesNotExistException e) {
