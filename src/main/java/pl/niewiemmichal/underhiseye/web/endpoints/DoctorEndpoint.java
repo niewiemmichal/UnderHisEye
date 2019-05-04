@@ -36,7 +36,8 @@ public class DoctorEndpoint {
     @RolesAllowed({"ADMINISTRATOR"})
     @PostMapping
     public Doctor addDoctor(@RequestBody Doctor newDoctor){
-        if(newDoctor.getId() != null) throw new BadRequestException();
+        if(newDoctor.getId() != null)
+            throw new BadRequestException("Doctor", "id", newDoctor.getId().toString(), " already exist");
         return doctorRepository.save(newDoctor);
     }
 }
