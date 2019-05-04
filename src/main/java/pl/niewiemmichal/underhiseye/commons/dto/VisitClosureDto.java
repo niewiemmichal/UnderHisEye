@@ -13,7 +13,7 @@ public class VisitClosureDto {
     @NonNull
     private String description;
     private String diagnosis;
-    private List<String> laboratoryExaminationCodes;
+    private List<LaboratoryExaminationDto> laboratoryExaminations;
     private List<PhysicalExaminationDto> physicalExaminations;
 
 }

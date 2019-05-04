@@ -9,8 +9,10 @@ import java.time.LocalDate;
 
 @Entity
 @Data
+@AllArgsConstructor
 @RequiredArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Builder
 public class Visit {
 
     @Id @GeneratedValue

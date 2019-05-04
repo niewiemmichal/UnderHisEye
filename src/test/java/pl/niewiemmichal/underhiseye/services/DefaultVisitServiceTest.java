@@ -1,12 +1,10 @@
 package pl.niewiemmichal.underhiseye.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -17,12 +15,9 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import pl.niewiemmichal.underhiseye.commons.dto.PhysicalExaminationDto;
-import pl.niewiemmichal.underhiseye.commons.dto.VisitClosureDto;
-import pl.niewiemmichal.underhiseye.commons.dto.VisitRegistrationDto;
+import pl.niewiemmichal.underhiseye.commons.dto.*;
 import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
-import pl.niewiemmichal.underhiseye.commons.exceptions.VisitServiceException;
 import pl.niewiemmichal.underhiseye.entities.*;
 import pl.niewiemmichal.underhiseye.entities.Registrant;
 import pl.niewiemmichal.underhiseye.repositories.DoctorRepository;
@@ -56,24 +51,19 @@ public class DefaultVisitServiceTest
     private final Registrant REGISTRANT =
             new Registrant("Existing", "Registrator");
 
-    /*
     private final Visit VISIT =
             new Visit("description", VisitStatus.REGISTERED, LocalDate.of(2019, 12, 20), PATIENT, REGISTRANT, DOCTOR);
-    */
-    private final Visit VISIT =
-            new Visit("", VisitStatus.REGISTERED, LocalDate.now(), PATIENT, REGISTRANT, DOCTOR);
+
     private final VisitRegistrationDto VISIT_REGISTRATION_DTO = new VisitRegistrationDto();
     private final VisitClosureDto VISIT_CLOSURE_DTO = new VisitClosureDto();
 
-    private Long EXISTING_VISIT_ID = 4L;
-    private Long NOT_EXISTING_DOCTOR_ID = 10L;
-    private Long NOT_EXISTING_PATIENT_ID = 20L;
-    private Long NOT_EXISTING_REGISTRANT_ID = 30L;
-    private Long NOT_EXISTING_VISIT_ID = 40L;
+    private static Long NOT_EXISTING_DOCTOR_ID = 10L;
+    private static Long NOT_EXISTING_PATIENT_ID = 20L;
+    private static Long NOT_EXISTING_REGISTRANT_ID = 30L;
+    private static Long NOT_EXISTING_VISIT_ID = 40L;
 
     @Before
     public void setUpMocks() {
-
         initMocks(this);
         DOCTOR.setId(1L);
         PATIENT.setId(2L);
@@ -111,7 +101,7 @@ public class DefaultVisitServiceTest
         verify(visitRepository).save(VISIT);
     }
 
-    @Test(expected = ResourceDoesNotExistException.class)
+    @Test(expected = BadRequestException.class)
     public void shouldNotRegisterVisitIfDoctorDoesNotExist() {
         //given
         VISIT.getDoctor().setId(NOT_EXISTING_DOCTOR_ID);
@@ -123,7 +113,7 @@ public class DefaultVisitServiceTest
         //expect exception
     }
 
-    @Test(expected = ResourceDoesNotExistException.class)
+    @Test(expected = BadRequestException.class)
     public void shouldNotRegisterVisitIfRegistrantDoesNotExist() {
         //given
         VISIT.getRegistrationSpecialist().setId(NOT_EXISTING_REGISTRANT_ID);
@@ -136,7 +126,7 @@ public class DefaultVisitServiceTest
         //expect exception
     }
 
-    @Test(expected = ResourceDoesNotExistException.class)
+    @Test(expected = BadRequestException.class)
     public void shouldNotRegisterVisitIfPatientDoesNotExist() {
         //given
         VISIT.getPatient().setId(NOT_EXISTING_PATIENT_ID);
@@ -258,13 +248,19 @@ public class DefaultVisitServiceTest
     @Test
     public void shouldCreateLaboratoryExaminationsIfPresent() {
         //given
+<<<<<<< HEAD
         VISIT.setId(EXISTING_VISIT_ID);
         final List<String> examinationCodeList= Lists.newArrayList("code", "code");
         VISIT_CLOSURE_DTO.setLaboratoryExaminationCodes(examinationCodeList);
+=======
+        final List<LaboratoryExaminationDto> examinationList= Lists.newArrayList(new LaboratoryExaminationDto(),
+                new LaboratoryExaminationDto());
+        VISIT_CLOSURE_DTO.setLaboratoryExaminations(examinationList);
+>>>>>>> 5f3844e532a390f5239c13c731599d5539433adb
         //when
         visitService.end(VISIT.getId(), VISIT_CLOSURE_DTO);
         //then
-        verify(examinationService).createLaboratoryExaminations(examinationCodeList);
+        verify(examinationService).createLaboratoryExaminations(examinationList);
     }
 
     @Test(expected = ResourceDoesNotExistException.class)
@@ -297,6 +293,37 @@ public class DefaultVisitServiceTest
     }
 
     //GETALL method
+
+    @Test
+    public void shouldGetFatVisit() {
+        //given
+        given(examinationService.getAllLaboratoryExaminationsByVisit(VISIT.getId())).willReturn(Lists.newArrayList(
+                new LaboratoryExamination(LaboratoryExamStatus.CANCELED, new Examination("name", "code"), VISIT),
+                new LaboratoryExamination(LaboratoryExamStatus.CANCELED, new Examination("name", "code"), VISIT),
+                new LaboratoryExamination(LaboratoryExamStatus.CANCELED, new Examination("name", "code"), VISIT)
+        ));
+        given(examinationService.getAllPhysicalExaminationsByVisit(VISIT.getId())).willReturn(Lists.newArrayList(
+                new PhysicalExamination("result", new Examination("name", "code"), VISIT),
+                new PhysicalExamination("result", new Examination("name", "code"), VISIT),
+                new PhysicalExamination("result", new Examination("name", "code"), VISIT)
+        ));
+        //when
+        VisitWithExaminationsDto actual = visitService.getFatVisit(VISIT.getId());
+
+        //then
+        assertThat(actual.getLaboratoryExaminations().size()).isEqualTo(3);
+        assertThat(actual.getPhysicalExaminations().size()).isEqualTo(3);
+        assertThat(actual.getVisit()).isEqualTo(VISIT);
+    }
+
+    @Test(expected = ResourceDoesNotExistException.class)
+    public void shouldThrowExceptionWhenTryingToGetNonExistingFatVisit() {
+        //given
+        //when
+        visitService.getFatVisit(NOT_EXISTING_VISIT_ID);
+        //then
+        //expect exception
+    }
 
     @Test
     public void shouldGetAllVisits() {

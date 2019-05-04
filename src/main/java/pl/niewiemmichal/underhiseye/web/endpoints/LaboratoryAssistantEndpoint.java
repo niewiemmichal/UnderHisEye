@@ -7,8 +7,10 @@ import pl.niewiemmichal.underhiseye.repositories.LaboratoryAssistantRepository;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 
-@RequestMapping ("laboratoryassistants")
+
+@RequestMapping ("assistants")
 @RestController
 public class LaboratoryAssistantEndpoint {
 
@@ -18,33 +20,22 @@ public class LaboratoryAssistantEndpoint {
         this.laboratoryAssistantRepository = laboratoryAssistantRepository;
     }
 
+    @RolesAllowed({"ASSISTANT", "ADMINISTRATOR"})
     @GetMapping ("/{id}")
     public LaboratoryAssistant getLaboratoryAssistant(@PathVariable Long id){
         return laboratoryAssistantRepository.findById(id).orElseThrow(()
                 -> new ResourceDoesNotExistException("LaboratoryAssistant","id",id.toString()));
     }
 
+    @RolesAllowed({"ADMINISTRATOR"})
     @GetMapping
     public List<LaboratoryAssistant> getAllLaboratoryAssistants(){
         return laboratoryAssistantRepository.findAll();
     }
 
+    @RolesAllowed({"ADMINISTRATOR"})
     @PostMapping
     public LaboratoryAssistant addLaboratoryAssistant(@RequestBody LaboratoryAssistant newLaboratoryAssistant){
         return laboratoryAssistantRepository.save(newLaboratoryAssistant);
-    }
-
-    @PutMapping("/{id}")
-    public LaboratoryAssistant updateLaboratoryAssistant
-            (@RequestBody LaboratoryAssistant newLaboratoryAssistant, @PathVariable Long id){
-        if(!laboratoryAssistantRepository.findById(id).isPresent())
-            throw new ResourceDoesNotExistException("LaboratoryAssistant", "id", id.toString());
-        else if(newLaboratoryAssistant.getId() != null && !(id.equals(newLaboratoryAssistant.getId())))
-            throw new ResourceConflictException("LaboratoryAssistant", "id", id.toString(),
-                    newLaboratoryAssistant.getId().toString());
-        else {
-            newLaboratoryAssistant.setId(id);
-            return laboratoryAssistantRepository.save(newLaboratoryAssistant);
-        }
     }
 }

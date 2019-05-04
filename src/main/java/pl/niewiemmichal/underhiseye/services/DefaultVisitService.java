@@ -8,6 +8,8 @@ import pl.niewiemmichal.underhiseye.commons.dto.VisitRegistrationDto;
 import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 import pl.niewiemmichal.underhiseye.entities.*;
+import pl.niewiemmichal.underhiseye.commons.dto.VisitWithExaminationsDto;
+import pl.niewiemmichal.underhiseye.entities.Visit;
 import pl.niewiemmichal.underhiseye.repositories.DoctorRepository;
 import pl.niewiemmichal.underhiseye.repositories.RegistrantRepository;
 import pl.niewiemmichal.underhiseye.repositories.PatientRepository;
@@ -15,7 +17,6 @@ import pl.niewiemmichal.underhiseye.repositories.VisitRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-
 
 @Service
 public class DefaultVisitService implements VisitService
@@ -96,6 +97,11 @@ public class DefaultVisitService implements VisitService
     public Visit get(Long id) {
         return visitRepository.findById(id).orElseThrow(()
                 -> new ResourceDoesNotExistException("Visit", "id", id.toString()));
+    }
+
+    @Override
+    public VisitWithExaminationsDto getFatVisit(Long id) {
+        return null;
     }
 
     @Override

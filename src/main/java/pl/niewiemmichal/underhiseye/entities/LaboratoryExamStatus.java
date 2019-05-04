@@ -5,5 +5,5 @@ public enum LaboratoryExamStatus {
     FINISHED,
     APPROVED,
     CANCELED,
-    CANCELED_BY_SUPERVISOR;
+    REJECTED
 }

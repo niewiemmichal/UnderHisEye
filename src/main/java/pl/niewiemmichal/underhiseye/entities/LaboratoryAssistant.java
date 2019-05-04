@@ -2,12 +2,13 @@ package pl.niewiemmichal.underhiseye.entities;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.annotation.security.RolesAllowed;
+import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Data
@@ -30,4 +31,8 @@ public class LaboratoryAssistant {
     @Size(max = 50)
     private String surname;
 
+    @Valid
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private User user;
 }

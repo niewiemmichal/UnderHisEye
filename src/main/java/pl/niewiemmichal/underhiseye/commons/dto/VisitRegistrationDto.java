@@ -3,7 +3,9 @@ package pl.niewiemmichal.underhiseye.commons.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.niewiemmichal.underhiseye.entities.Patient;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -20,5 +22,6 @@ public class VisitRegistrationDto {
     private Long doctorId;
     @NotNull
     private Long registrantId;
-
+    @Valid
+    private Patient patient;
 }
