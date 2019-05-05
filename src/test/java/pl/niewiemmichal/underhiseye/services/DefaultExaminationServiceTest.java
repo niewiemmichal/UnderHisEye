@@ -89,7 +89,7 @@ public class DefaultExaminationServiceTest {
         supervisor.setId(200L);
         laboratoryExamination.setId(1000L);
         physicalExamination.setId(2000L);
-        supervisorClosureDto.setSupervisorNote("note");
+        supervisorClosureDto.setNote("note");
 
         physicalExaminationDto = new PhysicalExaminationDto(physicalExamination.getResult(),
                 physicalExamination.getExamination().getCode(), visit.getId());
@@ -328,7 +328,7 @@ public class DefaultExaminationServiceTest {
         //when
         LaboratoryExamination actual = examinationService.reject(laboratoryExamination.getId(), supervisorClosureDto);
         //then
-        assertThat(actual.getSupervisorNote()).isEqualTo(supervisorClosureDto.getSupervisorNote());
+        assertThat(actual.getSupervisorNote()).isEqualTo(supervisorClosureDto.getNote());
         assertThat(actual.getStatus()).isEqualTo(LaboratoryExamStatus.REJECTED);
         verify(laboratoryExaminationRepository).save(laboratoryExamination);
     }
@@ -365,7 +365,7 @@ public class DefaultExaminationServiceTest {
         //given
         laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
         //when
-        supervisorClosureDto.setSupervisorId(NOT_EXISTING_SUPERVISOR_ID);
+        supervisorClosureDto.setId(NOT_EXISTING_SUPERVISOR_ID);
         examinationService.reject(laboratoryExamination.getId(), supervisorClosureDto);
         //then
         //expect exception
@@ -387,7 +387,7 @@ public class DefaultExaminationServiceTest {
         laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
         //when
         LaboratoryExamination actual = examinationService.approve(laboratoryExamination.getId(),
-                supervisorClosureDto.getSupervisorId());
+                supervisorClosureDto.getId());
         //then
         assertThat(actual.getStatus()).isEqualTo(LaboratoryExamStatus.APPROVED);
         verify(laboratoryExaminationRepository).save(laboratoryExamination);
@@ -399,7 +399,7 @@ public class DefaultExaminationServiceTest {
         laboratoryExamination.setStatus(LaboratoryExamStatus.APPROVED);
         //when
         LaboratoryExamination actual = examinationService.approve(laboratoryExamination.getId(),
-                supervisorClosureDto.getSupervisorId());
+                supervisorClosureDto.getId());
         //then
         assertThat(actual.getStatus()).isEqualTo(LaboratoryExamStatus.APPROVED);
         verify(laboratoryExaminationRepository, never()).save(laboratoryExamination);
@@ -414,7 +414,7 @@ public class DefaultExaminationServiceTest {
         for (LaboratoryExamStatus status : statuses) {
             try {
                 laboratoryExamination.setStatus(status);
-                examinationService.approve(laboratoryExamination.getId(), supervisorClosureDto.getSupervisorId());
+                examinationService.approve(laboratoryExamination.getId(), supervisorClosureDto.getId());
                 fail("Should throw exception when approving examination with wrong status");
             } catch (BadRequestException e) {
                 //expect exception
@@ -427,7 +427,7 @@ public class DefaultExaminationServiceTest {
         //given
         laboratoryExamination.setStatus(LaboratoryExamStatus.FINISHED);
         //when
-        examinationService.approve(NOT_EXISTING_LABORATORY_EXAMINATION_ID, supervisorClosureDto.getSupervisorId());
+        examinationService.approve(NOT_EXISTING_LABORATORY_EXAMINATION_ID, supervisorClosureDto.getId());
         //then
         //expect exception
     }

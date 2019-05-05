@@ -1,6 +1,10 @@
 package pl.niewiemmichal.underhiseye.web.endpoints;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.commons.dto.NewUserDto;
@@ -14,8 +18,9 @@ import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
+@Api(tags = {"supervisors"})
 @RestController
-@RequestMapping("supervisors")
+@RequestMapping(value = "supervisors", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LaboratorySupervisorEndpoint {
 
     private final LaboratorySupervisorRepository laboratorySupervisorRepository;
@@ -28,22 +33,29 @@ public class LaboratorySupervisorEndpoint {
         this.registrationService = registrationService;
     }
 
+    @ApiOperation("Get laboratory supervisor's details by id")
     @RolesAllowed({"REGISTRANT", "ADMINISTRATOR"})
     @GetMapping("/{id}")
-    public LaboratorySupervisor getLaboratorySupervisor(@PathVariable Long id){
+    public LaboratorySupervisor getLaboratorySupervisor(
+            @ApiParam(value = "Laboratory supervisor's id", required = true) @PathVariable Long id)
+    {
         return laboratorySupervisorRepository.findById(id).orElseThrow(
                 () -> new ResourceDoesNotExistException("LaboratorySupervisor","id",id.toString()));
     }
 
+    @ApiOperation("Get all laboratory supervisors")
     @RolesAllowed({"ADMINISTRATOR"})
     @GetMapping
     public List<LaboratorySupervisor> getAllLaboratorySupervisors(){
         return laboratorySupervisorRepository.findAll();
     }
 
+    @ApiOperation("Add laboratory supervisor")
     @RolesAllowed({"ADMINISTRATOR"})
     @PostMapping
-    public LaboratorySupervisor addLaboratorySupervisor(@Valid @RequestBody NewUserDto newSupervisor){
+    public LaboratorySupervisor addLaboratorySupervisor(
+            @ApiParam(value = "New laboratory supervisor's details", required = true)
+            @Valid @RequestBody NewUserDto newSupervisor){
         return registrationService.registerSupervisor(newSupervisor);
     }
 }

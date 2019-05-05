@@ -1,21 +1,22 @@
 package pl.niewiemmichal.underhiseye.web.endpoints;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import pl.niewiemmichal.underhiseye.commons.dto.NewUserDto;
-import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 
 import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.entities.Doctor;
 import pl.niewiemmichal.underhiseye.repositories.DoctorRepository;
 import pl.niewiemmichal.underhiseye.services.RegistrationService;
-
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
+@Api(tags = {"doctors"})
 @RestController
-@RequestMapping("doctors")
+@RequestMapping(value = "doctors", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DoctorEndpoint {
 
     private final DoctorRepository doctorRepository;
@@ -27,22 +28,27 @@ public class DoctorEndpoint {
         this.registrationService = registrationService;
     }
 
+    @ApiOperation(value = "Get doctor's details by id")
     @RolesAllowed({"DOCTOR", "ADMINISTRATOR"})
-    @GetMapping("/{id}")
-    public Doctor getDoctor(@PathVariable Long id){
+    @GetMapping(value = "/{id}")
+    public Doctor getDoctor(@ApiParam(value = "Doctor's id", required = true) @PathVariable Long id){
         return doctorRepository.findById(id)
                 .orElseThrow(() -> new ResourceDoesNotExistException("Doctor", "id", id.toString()));
     }
 
+    @ApiOperation(value = "Get all doctors")
     @RolesAllowed({"ADMINISTRATOR"})
     @GetMapping
     public List<Doctor> getAllDoctors(){
         return  doctorRepository.findAll();
     }
 
+    @ApiOperation(value = "Add doctor")
     @RolesAllowed({"ADMINISTRATOR"})
     @PostMapping
-    public Doctor addDoctor(@Valid @RequestBody NewUserDto newDoctor){
+    public Doctor addDoctor(
+            @ApiParam(value = "New doctor's details", required = true)
+            @Valid @RequestBody NewUserDto newDoctor){
         return registrationService.registerDoctor(newDoctor);
     }
 }

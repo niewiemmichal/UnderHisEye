@@ -28,6 +28,6 @@ public class UserService implements UserDetailsService {
     }
 
     User create(String username, String password, Role role) {
-        return userRepository.save(new User(username, password, Sets.newHashSet(role)));
+        return userRepository.save(new User(username, password, role));
     }
 }
