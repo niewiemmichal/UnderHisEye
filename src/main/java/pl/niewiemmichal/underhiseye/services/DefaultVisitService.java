@@ -26,29 +26,28 @@ public class DefaultVisitService implements VisitService
     private final RegistrantRepository registrantRepository;
     private final VisitRepository visitRepository;
     private final ExaminationService examinationService;
-
     private final VisitStateValidator visitStateValidator;
 
     @Autowired
     public DefaultVisitService(final DoctorRepository doctorRepository, final PatientRepository patientRepository,
                                final RegistrantRepository registrantRepository, final ExaminationService examinationService,
-                               final VisitRepository visitRepository)
-    {
+                               final VisitRepository visitRepository) {
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.registrantRepository = registrantRepository;
         this.visitRepository = visitRepository;
         this.examinationService = examinationService;
 
+        //use spring dependency injection
         visitStateValidator = new VisitStateValidator();
-}
+    }
 
     @Override
     public void cancel(Long visitId, String reason) {
         Visit visit = visitRepository.findById(visitId).orElseThrow(()
                 -> new ResourceDoesNotExistException("Visit", "id", visitId.toString()));
-        if(!visitStateValidator.cancelableVisit(visit.getStatus()))
-            throw new BadRequestException();
+        //if(!visitStateValidator.cancelableVisit(visit.getStatus()))
+        //    throw new BadRequestException(); <--- bad request now takes params
         visit.setStatus(VisitStatus.CANCELED);
         visit.setDescription(reason);
         visitRepository.save(visit);
@@ -56,21 +55,21 @@ public class DefaultVisitService implements VisitService
 
     @Override
     public Visit register(VisitRegistrationDto visitRegistration) {
+        /*
+
+        use VisitMapper class (inject it first)
+
         Doctor doctor = doctorRepository.findById(visitRegistration.getDoctorId()).orElseThrow(()
                 -> new ResourceDoesNotExistException("Doctor", "id", visitRegistration.getDoctorId().toString()));
         Patient patient = patientRepository.findById(visitRegistration.getPatientId()).orElseThrow(()
                 -> new ResourceDoesNotExistException("Patient", "id", visitRegistration.getPatientId().toString()));
         Registrant registrant = registrantRepository.findById(visitRegistration.getRegistrantId()).orElseThrow(()
                 -> new ResourceDoesNotExistException("Registration Specialist", "id", visitRegistration.getRegistrantId().toString()));
+         */
 
-        if(visitRegistration.getDate().isBefore(LocalDate.now()))
-            throw new BadRequestException();
-        Visit visit = new Visit(
-                "",
-                VisitStatus.REGISTERED,
-                visitRegistration.getDate(),
-                patient,
-                registrant,
+        //if(visitRegistration.getDate().isBefore(LocalDate.now()))
+            //throw new BadRequestException(); <--- bad request now takes params
+        Visit visit = new Visit("", VisitStatus.REGISTERED, visitRegistration.getDate(), patient, registrant,//
                 doctor);
         visit.setStatus(VisitStatus.REGISTERED);
         return visitRepository.save(visit);
@@ -80,13 +79,13 @@ public class DefaultVisitService implements VisitService
     public void end(Long visitId, VisitClosureDto visitClosure) {
         Visit visit = visitRepository.findById(visitId).orElseThrow(()
                 -> new ResourceDoesNotExistException("Visit", "id", visitId.toString()));
-        if(!visitStateValidator.finishableVisit(visit.getStatus()))
-            throw new BadRequestException();
-        if(visitClosure.getPhysicalExaminations() != null)
+        //if(!visitStateValidator.finishableVisit(visit.getStatus()))
+        //    throw new BadRequestException(); <--- bad request now takes params
+        if(visitClosure.getPhysicalExaminations() != null) //null or empty
             examinationService.createPhysicalExaminations(visitClosure.getPhysicalExaminations());
-        if(visitClosure.getLaboratoryExaminationCodes() != null)
-            examinationService.createLaboratoryExaminations(visitClosure.getLaboratoryExaminationCodes());
-        if(visitClosure.getDiagnosis() != null)
+        if(visitClosure.getLaboratoryExaminations() != null) //null or empty
+            examinationService.createLaboratoryExaminations(visitClosure.getLaboratoryExaminations());
+        if(visitClosure.getDiagnosis() != null) //null or empty
             visit.setDiagnosis(visitClosure.getDiagnosis());
         visit.setStatus(VisitStatus.FINISHED);
         visit.setDescription(visitClosure.getDescription());
@@ -95,8 +94,8 @@ public class DefaultVisitService implements VisitService
 
     @Override
     public Visit get(Long id) {
-        return visitRepository.findById(id).orElseThrow(()
-                -> new ResourceDoesNotExistException("Visit", "id", id.toString()));
+        return visitRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Visit", "id",
+                id.toString()));
     }
 
     @Override
