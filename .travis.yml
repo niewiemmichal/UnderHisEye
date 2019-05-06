@@ -10,7 +10,7 @@ cache:
 
 before_deploy:
   - "mv './build/libs/underhiseye-0.0.1-SNAPSHOT.jar' ./application.jar"
-  - "zip underhiseye.zip ./application.jar .ebextensions"
+  - "zip -r underhiseye.zip ./application.jar .ebextensions"
 
 deploy:
   provider: "elasticbeanstalk"
