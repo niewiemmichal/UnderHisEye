@@ -1,5 +1,6 @@
 package pl.niewiemmichal.underhiseye.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -32,7 +33,7 @@ public class LaboratoryAssistant {
     private String surname;
 
     @Valid
-    @OneToOne(cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToOne
+    @JsonIgnore
     private User user;
 }

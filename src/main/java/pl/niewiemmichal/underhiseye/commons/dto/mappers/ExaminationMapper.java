@@ -4,7 +4,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
-import org.mapstruct.factory.Mappers;
 import pl.niewiemmichal.underhiseye.commons.dto.AssistantClosureDto;
 import pl.niewiemmichal.underhiseye.commons.dto.LaboratoryExaminationDto;
 import pl.niewiemmichal.underhiseye.commons.dto.PhysicalExaminationDto;
@@ -28,7 +27,12 @@ public interface ExaminationMapper {
     @Mapping(target = "completionDate", expression = "java(java.time.LocalDate.now())")
     LaboratoryExamination toEntity(AssistantClosureDto dto, @MappingTarget LaboratoryExamination examination);
 
-    @Mapping(target = "supervisor", source = "supervisorId")
+    @Mapping(target = "supervisor", source = "dto.id")
+    @Mapping(target = "supervisorNote", source = "dto.note")
     @Mapping(target = "approvalDate", expression = "java(java.time.LocalDate.now())")
     LaboratoryExamination toEntity(SupervisorClosureDto dto, @MappingTarget LaboratoryExamination examination);
+
+    @Mapping(target = "supervisor", source = "supervisorId")
+    @Mapping(target = "approvalDate", expression = "java(java.time.LocalDate.now())")
+    LaboratoryExamination toEntity(Long supervisorId, @MappingTarget LaboratoryExamination examination);
 }
