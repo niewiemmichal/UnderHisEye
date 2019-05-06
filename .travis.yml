@@ -2,17 +2,19 @@ language: java
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
 cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
+
 deploy:
-  provider: elasticbeanstalk
-  region: eu-central-1
-  app: underhiseye
-  env: Underhiseye-env
-  bucket_name: elasticbeanstalk-eu-central-1-444439420847
-  access_key_id:
-    secure: RiKlR8LJHvtkukY1YdLbtbNMZiCNR62cr9nb3jbaOauIJ5j/kc2L08pxQ8iLcbJPOcXP6ok17lcwBxqqeA9wDd5ZPP0WVV7C+CH0+Ql0NE1T2oKKnlb4uNvQi81CyrhUXNQnehhgVFKqsZO1Thu0Q01fBlpYi1f/nS1mx3UTZTzNtVKHPLyTCb87SiDiToNk8p2r4jFptxe+IQyEU+QGLuMFjt+C9O155IfUU+R+6p94FRCrKE8dMcY8lLdXgTxfTXP6srN833L98sg9+aBjwOTX1SAV2cVY4xMJeCFq6srNK7quQkx96fRaKHo4+VozCA0KA4vD8VtRpdRapme7+g9B04Xa1xigyG4R1dOShI7pBKjoQWHXSkVytKr0Rn616Ln6gFALRvlb/kt+D0uNU2SXwLp8Lz3upZ901KnwhjuYrGOn3Bwe6+IrVaOltwOkGD/GD1HurzZW7q1MftaUaKCVmkYTkmuI2mZt5YTge6bI+uA9255Y7wxN9KwE0smeLdFw+ZLchWEsCLI/P/kmzWJTjfY5XhtjBS084tBea8H1svLooV8feLJHu6SC69R/0V8idYMjxcXF28GOw90kGROBaX2rlTI2YurdSuO0arW5OT0E/nzGlQvFt/6YJftpdasSfghd3Ghd20JXXguZQ9ROnmrE0yMG1ys+s/d6Iic=
-  secret_access_key:
-    secure: HoroG44NrZi1Ybc3oEPVwXKR9xWJTBax1w7UFr/fKDn3He1tt3WU2ga0ZgCMRNBsU2lSedyj0Yv2jMY/mJMPlBHW/RoMOpEdog3F4XjvGabaAmGcJXj32ErBGD01Gujf2yvARb/pYS6wm2lrvb2zcIUADZR3OrMPsNeo5zpIGfTG3r291hOhqlu5jnEH1iA6SIYFCOM1nqlBsgxKgnD00nBkYq5RgTsOCmgMe6js+Prjm6CzfNTyTJf+3ERkUyI4aYhbhtX9j1T3HDpTpEAlgeJzdQ6J7lHhKGNHxO6A8nZL6YwHABWVs5Xs1x8reluyKKpwXylN+wwrQTnGv2TJUCFOeIy8VOaihgjncu28Ssi+RIBy6aQBqf60a2F9GZFG/kU5t8+wH3bQRqe/3JeVKI6woIgKJ5EYiULRBH3c79BNCUL/MgvlDjxuPLZwd2HriXzpm19eFH2rZVEOIpzlY9GwRmhJ7K/c7zItR37GSHfsM0QEUcgWtBFB73814+BbSd8aV8TWglTe6ZD9BnNHeeepU3wV9JhTOj1F99feRTJ3x/F3bw9dIivgyhy6gX51akL05ypa5ROVd8kvU8p1dUsyunQTcCw0+ofynINr5rNRzOVEXvRWqz7B63LEtKYX37tm9p5lM+Zqdw180bwgol5O72JfS5xq+p2gUGoENNs=
+  provider: "elasticbeanstalk"
+  region: "eu-central-1"
+  app: "underhiseye"
+  env: "Underhiseye-env"
+  zip_file: "./build/libs/underhiseye-0.0.1-SNAPSHOT.jar"
+  skip_cleanup: true
+  bucket_name: $ARTIFACTS_BUCKET
+  access_key_id: $ARTIFACTS_KEY
+  secret_access_key: $ARTIFACTS_SECRET
