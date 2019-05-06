@@ -30,8 +30,7 @@ public class ExaminationEndpoint {
     @RolesAllowed({"ASSISTANT"})
     @PatchMapping("/finish/{id}")
     public LaboratoryExamination finish(
-            @ApiParam(value = "Laboratory examination's id", required = true) @PathVariable
-                    Long id,
+            @ApiParam(value = "Laboratory examination's id", required = true) @PathVariable Long id,
             @ApiParam(name = "details", value = "Assistant's id and result of examination", required = true)
             @Valid @RequestBody AssistantClosureDto closure)
     {

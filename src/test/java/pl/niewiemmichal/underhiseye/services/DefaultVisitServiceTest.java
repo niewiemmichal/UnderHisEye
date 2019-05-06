@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import org.assertj.core.util.Lists;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,6 +26,7 @@ import pl.niewiemmichal.underhiseye.repositories.RegistrantRepository;
 import pl.niewiemmichal.underhiseye.repositories.PatientRepository;
 import pl.niewiemmichal.underhiseye.repositories.VisitRepository;
 
+@Ignore
 public class DefaultVisitServiceTest
 {
 
