@@ -49,19 +49,33 @@ public class DefaultVisitService implements VisitService
     public void cancel(Long visitId, String reason) {
         Visit visit = visitRepository.findById(visitId).orElseThrow(()
                 -> new ResourceDoesNotExistException("Visit", "id", visitId.toString()));
-        //if(!visitStateValidator.cancelableVisit(visit.getStatus()))
-           // throw new BadRequestException("Visit", "status", visit.getStatus().toString(), "can't be canceled"); //<--- bad request now takes params
-        visit.setStatus(changeState(visit, VisitStatus.CANCELED));
-        visit.setDescription(reason);
-        visitRepository.save(visit);
+        if(changeState(visit.getStatus(), VisitStatus.CANCELED)) {
+            visit.setStatus(changeState(visit, VisitStatus.CANCELED));
+            visit.setDescription(reason);
+            visitRepository.save(visit);
+        }
     }
 
     @Override
     public Visit register(VisitRegistrationDto visitRegistration) {
         if(visitRegistration.getDate().isBefore(LocalDate.now()))
-            throw new BadRequestException("Visit", "Date", visitRegistration.getDate().toString(), "date can't be from the past"); //<--- bad request now takes params
-        Visit visit = wrapToEntity(() -> visitMapper.toEntity(visitRegistration));
-        visit.setStatus(VisitStatus.REGISTERED);
+            throw new BadRequestException("Visit", "Date", visitRegistration.getDate().toString(), "date can't be from the past");
+        doctorRepository.findById(visitRegistration.getDoctorId()).orElseThrow(()
+                -> new BadRequestException("Doctor", "id", visitRegistration.getDoctorId().toString(), "Doctor does not exist"));
+        patientRepository.findById(visitRegistration.getPatientId()).orElseThrow(()
+                -> new BadRequestException("Doctor", "id", visitRegistration.getPatientId().toString(), "Patient does not exist"));
+        registrantRepository.findById(visitRegistration.getRegistrantId()).orElseThrow(()
+                -> new BadRequestException("Doctor", "id", visitRegistration.getRegistrantId().toString(), "Registrant does not exist"));
+        Visit visit = visitMapper.toEntity(visitRegistration);
+        //visit = visitMapper.toEntity(visitRegistration);
+        /*
+        Visit visit = new Visit(VisitStatus.REGISTERED, visitRegistration.getDate(),
+                patientRepository.getOne(visitRegistration.getPatientId()),
+                registrantRepository.getOne(visitRegistration.getRegistrantId()),
+                doctorRepository.getOne(visitRegistration.getDoctorId()));
+        */
+        //visit = visitMapper.toEntity(visitRegistration);
+        //Visit visit = wrapToEntity(() -> visitMapper.toEntity(visitRegistration));
         return visitRepository.save(visit);
     }
 
@@ -69,17 +83,17 @@ public class DefaultVisitService implements VisitService
     public void end(Long visitId, VisitClosureDto visitClosure) {
         Visit visit = visitRepository.findById(visitId).orElseThrow(()
                 -> new ResourceDoesNotExistException("Visit", "id", visitId.toString()));
-        visit.setStatus(changeState(visit, VisitStatus.FINISHED));
-
-        if(visitClosure.getPhysicalExaminations() != null || !visitClosure.getPhysicalExaminations().isEmpty())
+        if(visitClosure.getPhysicalExaminations() != null && !visitClosure.getPhysicalExaminations().isEmpty())
             examinationService.createPhysicalExaminations(visitClosure.getPhysicalExaminations());
-        if(visitClosure.getLaboratoryExaminations() != null || !visitClosure.getLaboratoryExaminations().isEmpty())
+        if(visitClosure.getLaboratoryExaminations() != null && !visitClosure.getLaboratoryExaminations().isEmpty())
             examinationService.createLaboratoryExaminations(visitClosure.getLaboratoryExaminations());
-        if(visitClosure.getDiagnosis() != null || !visitClosure.getDiagnosis().isEmpty())
+        if(visitClosure.getDiagnosis() != null && !visitClosure.getDiagnosis().isEmpty())
             visit.setDiagnosis(visitClosure.getDiagnosis());
-        visit.setStatus(VisitStatus.FINISHED);
-        visit.setDescription(visitClosure.getDescription());
-        visitRepository.save(visit);
+        if(changeState(visit.getStatus(), VisitStatus.FINISHED)) {
+            visit.setStatus(VisitStatus.FINISHED);
+            visit.setDescription(visitClosure.getDescription());
+            visitRepository.save(visit);
+        }
     }
 
     @Override
@@ -92,6 +106,7 @@ public class DefaultVisitService implements VisitService
     public VisitWithExaminationsDto getFatVisit(Long id) {
         Visit visit = visitRepository.findById(id).orElseThrow(() -> new ResourceDoesNotExistException("Visit", "id",
                 id.toString()));
+
         VisitWithExaminationsDto visitWithExaminationsDto = new VisitWithExaminationsDto(visit,
                 laboratoryExaminationRepository.findAllByVisit_Id(visit.getId()),
                 physicalExaminationRepository.findAllByVisit_Id(visit.getId()));
@@ -114,5 +129,11 @@ public class DefaultVisitService implements VisitService
     private VisitStatus changeState(Visit visit, VisitStatus endStatus) {
         if(visit.getStatus() == VisitStatus.REGISTERED || visit.getStatus().equals(endStatus)) return endStatus;
         else throw new BadRequestException("Visit", "status", visit.getStatus().toString(), "can't be canceled");
+    }
+
+    private boolean changeState(VisitStatus current, VisitStatus desired) {
+        if(current == VisitStatus.REGISTERED) return true;
+        else if(current.equals(desired)) return false;
+        else throw new BadRequestException("Visit", "status", current.toString(), "visit is currently" + current.toString());
     }
 }

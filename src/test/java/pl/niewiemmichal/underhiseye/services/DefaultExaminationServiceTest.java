@@ -65,7 +65,7 @@ public class DefaultExaminationServiceTest {
     private Patient patient = new Patient("Existing", "Patient", "123", patientAddress);
     private Registrant registrant = new Registrant("Existing", "Registrant");
 
-    private Visit visit = new Visit("description", VisitStatus.REGISTERED,
+    private Visit visit = new Visit(VisitStatus.REGISTERED,
             LocalDate.of(2019, 12, 20), patient, registrant, doctor);
 
     private LaboratoryExamination laboratoryExamination = new LaboratoryExamination(LaboratoryExamStatus.ORDERED,

@@ -55,8 +55,9 @@ public class DefaultVisitServiceTest
 
     private Registrant registrant =  new Registrant("Existing", "Registrator");
 
-    private Visit visit = new Visit("description", VisitStatus.REGISTERED,
+    private Visit visit = new Visit(VisitStatus.REGISTERED,
             LocalDate.of(2019, 12, 20), patient, registrant, doctor);
+
 
     private VisitRegistrationDto visitRegistrationDto = new VisitRegistrationDto();
     private VisitClosureDto visitClosureDto = new VisitClosureDto();
@@ -92,7 +93,7 @@ public class DefaultVisitServiceTest
         visitRegistrationDto.setRegistrantId(registrant.getId());
         visitRegistrationDto.setDate(visit.getDate());
 
-        visitClosureDto.setDescription(visit.getDescription());
+        visitClosureDto.setDescription("pizda");
     }
 
     @Test
@@ -342,9 +343,9 @@ public class DefaultVisitServiceTest
     public void shouldGetAllVisits() {
         //given
         List<Visit> visits = Lists.newArrayList(
-                new Visit("1", VisitStatus.REGISTERED, LocalDate.now(), patient, registrant, doctor),
-                new Visit("2", VisitStatus.CANCELED, LocalDate.now(), patient, registrant, doctor),
-                new Visit("3", VisitStatus.FINISHED, LocalDate.now(), patient, registrant, doctor)
+                new Visit(VisitStatus.REGISTERED, LocalDate.now(), patient, registrant, doctor),
+                new Visit(VisitStatus.CANCELED, LocalDate.now(), patient, registrant, doctor),
+                new Visit(VisitStatus.FINISHED, LocalDate.now(), patient, registrant, doctor)
         );
         given(visitRepository.findAll()).willReturn(visits);
         //when
