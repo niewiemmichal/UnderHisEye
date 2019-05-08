@@ -16,7 +16,6 @@ import pl.niewiemmichal.underhiseye.repositories.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +50,7 @@ public class DefaultVisitService implements VisitService
     public void cancel(@NonNull Long visitId,@NonNull String reason) {
         Visit visit = visitRepository.findById(visitId).orElseThrow(()
                 -> new ResourceDoesNotExistException("Visit", "id", visitId.toString()));
-        if(changeState(visit.getStatus(), VisitStatus.CANCELED)) {
+        if(canChangeState(visit.getStatus(), VisitStatus.CANCELED)) {
             visit.setStatus(changeState(visit, VisitStatus.CANCELED));
             visit.setDescription(reason);
             visitRepository.save(visit);
@@ -82,7 +81,7 @@ public class DefaultVisitService implements VisitService
         if(visitClosure.getDiagnosis() != null && !visitClosure.getDiagnosis().isEmpty())
             visit.setDiagnosis(visitClosure.getDiagnosis());
 
-        if(changeState(visit.getStatus(), VisitStatus.FINISHED)) {
+        if(canChangeState(visit.getStatus(), VisitStatus.FINISHED)) {
             visit.setStatus(changeState(visit, VisitStatus.FINISHED));
             visit.setDescription(visitClosure.getDescription());
             visitRepository.save(visit);
@@ -115,7 +114,7 @@ public class DefaultVisitService implements VisitService
         else throw new BadRequestException("Visit", "status", visit.getStatus().toString(), "can't be canceled");
     }
 
-    private boolean changeState(@NonNull VisitStatus current, @NonNull VisitStatus desired) {
+    private boolean canChangeState(@NonNull VisitStatus current, @NonNull VisitStatus desired) {
         if(current == VisitStatus.REGISTERED) return true;
         else if(current.equals(desired)) return false;
         else throw new BadRequestException("Visit", "status", current.toString(), "visit is currently" + current.toString());
