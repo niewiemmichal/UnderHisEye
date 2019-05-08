@@ -99,6 +99,7 @@ public class DefaultVisitServiceTest
     @Test
     public void shouldRegisterVisit() {
         //when
+        visit.setId(null);
         Visit created = visitService.register(visitRegistrationDto);
 
         //then
