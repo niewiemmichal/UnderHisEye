@@ -93,7 +93,7 @@ public class DefaultVisitServiceTest
         visitRegistrationDto.setRegistrantId(registrant.getId());
         visitRegistrationDto.setDate(visit.getDate());
 
-        visitClosureDto.setDescription("pizda");
+        visitClosureDto.setDescription("Reason");
     }
 
     @Test
