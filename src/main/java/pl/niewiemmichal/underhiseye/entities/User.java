@@ -2,6 +2,7 @@ package pl.niewiemmichal.underhiseye.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
+@NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 public class User implements UserDetails {
 
@@ -41,7 +43,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Sets.newHashSet(new SimpleGrantedAuthority(role.toString()));
+        return Sets.newHashSet(new SimpleGrantedAuthority("ROLE_" + role.toString()));
     }
 
     @Override

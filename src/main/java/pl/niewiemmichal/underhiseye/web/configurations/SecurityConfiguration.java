@@ -17,16 +17,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic();
+        http.csrf().disable().httpBasic();
     }
 
     @Autowired
-    protected void configure(AuthenticationManagerBuilder auth, DaoAuthenticationProvider provider,
-                             PasswordEncoder encoder) throws Exception {
-        //auth.authenticationProvider(provider);
-        auth.inMemoryAuthentication()
-                .withUser("doctor").password(encoder.encode("doctor")).roles("DOCTOR")
-                .and()
-                .withUser("registrant").password(encoder.encode("doctor")).roles("REGISTRANT");
+    protected void configure(AuthenticationManagerBuilder auth, DaoAuthenticationProvider provider) {
+        auth.authenticationProvider(provider);
     }
 }

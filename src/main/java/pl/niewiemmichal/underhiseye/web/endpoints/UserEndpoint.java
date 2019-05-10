@@ -15,6 +15,7 @@ import pl.niewiemmichal.underhiseye.services.RegistrationService;
 
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
@@ -33,7 +34,7 @@ public class UserEndpoint {
     }
 
     @ApiOperation("Get user's details by username")
-    @RolesAllowed({"ADMINISTRATOR", "DOCTOR", "REGISTRANT", "SUPERVISOR", "ASSISTANT"})
+    @PermitAll
     @GetMapping("/{username}")
     public User getUserDetails(@ApiParam(value = "User's username", required = true) @PathVariable String username){
         return userRepository.findById(username)
@@ -50,7 +51,7 @@ public class UserEndpoint {
     @ApiOperation("Add administrator")
     @RolesAllowed({"ADMINISTRATOR"})
     @PostMapping
-    public User addPatientRegistrationSpecialist(
+    public User addAdministrator(
             @ApiParam(value = "New administrator's details", required = true)
             @Valid @RequestBody NewUserDto newAdministrator) {
         return registrationService.registerAdministrator(newAdministrator);

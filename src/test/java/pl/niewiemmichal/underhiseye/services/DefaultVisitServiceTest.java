@@ -205,7 +205,6 @@ public class DefaultVisitServiceTest
 
         //then
         assertThat(visit.getStatus()).isEqualTo(VisitStatus.CANCELED);
-        assertThat(visit.getDescription()).isEqualTo("reason");
         verify(visitRepository, never()).save(visit);
     }
 
@@ -243,7 +242,6 @@ public class DefaultVisitServiceTest
 
         //then
         assertThat(visit.getStatus()).isEqualTo(VisitStatus.FINISHED);
-        assertThat(visit.getDescription()).isEqualTo("description");
         verify(visitRepository, never()).save(visit);
     }
 
