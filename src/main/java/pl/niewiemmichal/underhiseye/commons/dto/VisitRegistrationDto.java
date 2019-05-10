@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.niewiemmichal.underhiseye.entities.Patient;
+import pl.niewiemmichal.underhiseye.entities.VisitStatus;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
