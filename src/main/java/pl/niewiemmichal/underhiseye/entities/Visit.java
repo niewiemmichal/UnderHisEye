@@ -18,8 +18,7 @@ public class Visit {
     @Id @GeneratedValue
     private Long id;
 
-    @NonNull
-    @Column(nullable = false, length = 8000)
+    @Column(length = 8000)
     @Size(max = 8000)
     private String description;
 
