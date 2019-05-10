@@ -1,0 +1,25 @@
+language: java
+before_cache:
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+
+before_deploy:
+  - "mv './build/libs/underhiseye-0.0.1-SNAPSHOT.jar' ./application.jar"
+  - "zip -r underhiseye.zip ./application.jar .ebextensions"
+
+deploy:
+  provider: "elasticbeanstalk"
+  region: "eu-central-1"
+  app: "underhiseye"
+  env: "Underhiseye-env"
+  zip_file: "./underhiseye.zip"
+  skip_cleanup: true
+  wait_until_deployed: true
+  bucket_name: $ARTIFACTS_BUCKET
+  access_key_id: $ARTIFACTS_KEY
+  secret_access_key: $ARTIFACTS_SECRET

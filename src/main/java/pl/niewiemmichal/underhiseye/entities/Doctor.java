@@ -1,5 +1,6 @@
 package pl.niewiemmichal.underhiseye.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,7 +38,7 @@ public class Doctor {
     private String gmcNumber;
 
     @Valid
-    @OneToOne(cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToOne
+    @JsonIgnore
     private User user;
 }

@@ -13,9 +13,9 @@ import javax.validation.constraints.Size;
 public class SupervisorClosureDto {
 
     @Size(max = 8000)
-    private String supervisorNote;
+    private String note;
 
     @NonNull
-    private Long supervisorId;
+    private Long id;
 
 }

@@ -1,5 +1,7 @@
 package pl.niewiemmichal.underhiseye.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Sets;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -24,25 +26,22 @@ public class User implements UserDetails {
     @Column(length = 64)
     private final String username;
 
+    @JsonIgnore
     @Setter
     @NonNull
     private String password;
 
-    @ElementCollection
     @NonNull
-    private final Set<Role> roles;
+    private final Role role;
 
-    public void addRole(Role role) {
-        roles.add(role);
+    public Role getRole() {
+        return role;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(r -> new SimpleGrantedAuthority(roles.toString())).collect(Collectors.toSet());
+        return Sets.newHashSet(new SimpleGrantedAuthority(role.toString()));
     }
 
     @Override
@@ -55,21 +54,25 @@ public class User implements UserDetails {
         return username;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
