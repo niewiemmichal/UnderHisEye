@@ -39,6 +39,16 @@ public class RegistrantEndpoint {
                         id.toString()));
     }
 
+    @ApiOperation("Get registrant's details by its user's username")
+    @RolesAllowed({"REGISTRANT"})
+    @GetMapping("/{username}")
+    public Registrant getPatientRegistrationSpecialist(
+            @ApiParam(value = "Registrant's username", required = true) @PathVariable String username)
+    {
+        return registrantRepository.findByUser_Username(username)
+                .orElseThrow(() -> new ResourceDoesNotExistException("RegistrantEndpoint", "username", username));
+    }
+
     @ApiOperation("Get all registrants")
     @RolesAllowed({"ADMINISTRATOR"})
     @GetMapping

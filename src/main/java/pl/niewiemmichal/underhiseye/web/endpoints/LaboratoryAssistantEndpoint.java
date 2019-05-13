@@ -42,6 +42,16 @@ public class LaboratoryAssistantEndpoint {
                 .orElseThrow(() -> new ResourceDoesNotExistException("LaboratoryAssistant", "id", id.toString()));
     }
 
+    @ApiOperation("Get laboratory assistant's details by its user's username")
+    @RolesAllowed({"ASSISTANT"})
+    @GetMapping ("/{username}")
+    public LaboratoryAssistant getLaboratoryAssistant(
+            @ApiParam(value = "Laboratory assistant's username", required = true) @PathVariable String username)
+    {
+        return laboratoryAssistantRepository.findByUser_Username(username)
+                .orElseThrow(() -> new ResourceDoesNotExistException("LaboratoryAssistant", "username", username));
+    }
+
     @ApiOperation("Get all laboratory assistants")
     @RolesAllowed({"ADMINISTRATOR"})
     @GetMapping

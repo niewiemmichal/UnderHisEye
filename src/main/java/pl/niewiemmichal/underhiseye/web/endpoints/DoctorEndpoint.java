@@ -36,6 +36,14 @@ public class DoctorEndpoint {
                 .orElseThrow(() -> new ResourceDoesNotExistException("Doctor", "id", id.toString()));
     }
 
+    @ApiOperation(value = "Get doctor's details by its user's username")
+    @RolesAllowed({"DOCTOR"})
+    @GetMapping(value = "/{username}")
+    public Doctor getDoctor(@ApiParam(value = "Doctor's username", required = true) @PathVariable String username){
+        return doctorRepository.findByUser_Username(username)
+                .orElseThrow(() -> new ResourceDoesNotExistException("Doctor", "username", username));
+    }
+
     @ApiOperation(value = "Get all doctors")
     @RolesAllowed({"ADMINISTRATOR"})
     @GetMapping

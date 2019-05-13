@@ -43,6 +43,16 @@ public class LaboratorySupervisorEndpoint {
                 () -> new ResourceDoesNotExistException("LaboratorySupervisor","id",id.toString()));
     }
 
+    @ApiOperation("Get laboratory supervisor's details by its user's username")
+    @RolesAllowed({"REGISTRANT"})
+    @GetMapping("/{username}")
+    public LaboratorySupervisor getLaboratorySupervisor(
+            @ApiParam(value = "Laboratory supervisor's username", required = true) @PathVariable String username)
+    {
+        return laboratorySupervisorRepository.findByUser_Username(username).orElseThrow(
+                () -> new ResourceDoesNotExistException("LaboratorySupervisor","username",username));
+    }
+
     @ApiOperation("Get all laboratory supervisors")
     @RolesAllowed({"ADMINISTRATOR"})
     @GetMapping
