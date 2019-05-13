@@ -41,7 +41,7 @@ public class RegistrantEndpoint {
 
     @ApiOperation("Get registrant's details by its user's username")
     @RolesAllowed({"REGISTRANT"})
-    @GetMapping("/{username}")
+    @GetMapping("/u/{username}")
     public Registrant getPatientRegistrationSpecialist(
             @ApiParam(value = "Registrant's username", required = true) @PathVariable String username)
     {
