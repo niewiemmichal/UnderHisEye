@@ -3,6 +3,7 @@ package pl.niewiemmichal.underhiseye.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -16,19 +17,19 @@ public class Patient {
     private Long id;
 
     @NonNull
-    @NotEmpty
+    @NotBlank
     @Column(nullable = false, length = 50)
     @Size(max = 50)
     private String name;
 
     @NonNull
-    @NotEmpty
+    @NotBlank
     @Column(nullable = false, length = 50)
     @Size(max = 50)
     private String surname;
 
     @NonNull
-    @NotEmpty
+    @NotBlank
     @Column(nullable = false,length = 11)
     @Size(min = 11, max = 11)
     private String personalIdentityNumber;
