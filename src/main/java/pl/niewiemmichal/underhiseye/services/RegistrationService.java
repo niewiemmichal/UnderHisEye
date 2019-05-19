@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.niewiemmichal.underhiseye.commons.dto.NewUserDto;
+import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
 import pl.niewiemmichal.underhiseye.entities.*;
 import pl.niewiemmichal.underhiseye.repositories.DoctorRepository;
 import pl.niewiemmichal.underhiseye.repositories.LaboratoryAssistantRepository;
@@ -36,6 +37,8 @@ public class RegistrationService {
     }
 
     public Doctor registerDoctor(NewUserDto dto) {
+        if(dto.getGmcNumber() == null || dto.getGmcNumber().length() != 7)
+            throw new BadRequestException("Doctor", "gmcNumber", dto.getGmcNumber(), "Doctor's GMC number should be of length 7");
         final User user = userService.create(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), Role.DOCTOR);
         final Doctor doctor = new Doctor(dto.getFirstName(), dto.getLastName(), dto.getGmcNumber());
         doctor.setUser(user);
