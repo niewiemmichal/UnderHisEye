@@ -34,6 +34,5 @@ public class LaboratoryAssistant {
 
     @Valid
     @OneToOne
-    @JsonIgnore
     private User user;
 }

@@ -33,6 +33,5 @@ public class Registrant {
 
     @Valid
     @OneToOne
-    @JsonIgnore
     private User user;
 }

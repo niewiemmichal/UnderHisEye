@@ -39,6 +39,5 @@ public class Doctor {
 
     @Valid
     @OneToOne
-    @JsonIgnore
     private User user;
 }

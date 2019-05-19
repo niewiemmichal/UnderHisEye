@@ -43,7 +43,7 @@ public class LaboratoryAssistantEndpoint {
     }
 
     @ApiOperation("Get laboratory assistant's details by its user's username")
-    @RolesAllowed({"ASSISTANT"})
+    @RolesAllowed({"ASSISTANT", "ADMINISTRATOR"})
     @GetMapping ("/u/{username}")
     public LaboratoryAssistant getLaboratoryAssistant(
             @ApiParam(value = "Laboratory assistant's username", required = true) @PathVariable String username)
