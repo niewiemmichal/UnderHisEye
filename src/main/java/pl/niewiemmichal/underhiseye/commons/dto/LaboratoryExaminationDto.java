@@ -5,6 +5,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@ToString
 public class LaboratoryExaminationDto {
     private String note;
     @NonNull

@@ -68,28 +68,28 @@ public class DefaultExaminationService implements ExaminationService {
 
     @Override
     public LaboratoryExamination finish(@NonNull Long id, @NonNull AssistantClosureDto assistantClosureDto) {
-        LOG.info("Finishing visit with id={}", id);
+        LOG.info("Finishing examination with id={}", id);
         return changeState(LaboratoryExamStatus.FINISHED, LaboratoryExamStatus.ORDERED,
                 () -> examinationMapper.toEntity(assistantClosureDto, findExamination(id)));
     }
 
     @Override
     public LaboratoryExamination cancel(@NonNull Long id, @NonNull AssistantClosureDto assistantClosureDto) {
-        LOG.info("Canceling visit with id={}", id);
+        LOG.info("Canceling examination with id={}", id);
         return changeState(LaboratoryExamStatus.CANCELED, LaboratoryExamStatus.ORDERED,
                 () -> examinationMapper.toEntity(assistantClosureDto, findExamination(id)));
     }
 
     @Override
     public LaboratoryExamination reject(@NonNull Long id, @NonNull SupervisorClosureDto supervisorClosureDto) {
-        LOG.info("Rejecting visit with id={}", id);
+        LOG.info("Rejecting examination with id={}", id);
         return changeState(LaboratoryExamStatus.REJECTED, LaboratoryExamStatus.FINISHED,
                 () -> examinationMapper.toEntity(supervisorClosureDto, findExamination(id)));
     }
 
     @Override
     public LaboratoryExamination approve(@NonNull Long id, @NonNull Long supervisorId) {
-        LOG.info("Approving visit with id={}", id);
+        LOG.info("Approving examination with id={}", id);
         return changeState(LaboratoryExamStatus.APPROVED, LaboratoryExamStatus.FINISHED,
                 () -> examinationMapper.toEntity(supervisorId, findExamination(id)));
     }
