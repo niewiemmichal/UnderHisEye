@@ -94,6 +94,18 @@ public class DefaultExaminationService implements ExaminationService {
         return physicalExaminationRepository.findAllByVisit_Id(visitId);
     }
 
+    @Override
+    public List<LaboratoryExamination> getAllLaboratoryExaminations()
+    {
+        return laboratoryExaminationRepository.findAll();
+    }
+
+    @Override
+    public List<LaboratoryExamination> getAllLaboratoryExaminationsByStatus(final LaboratoryExamStatus status)
+    {
+        return laboratoryExaminationRepository.findAllByStatus(status);
+    }
+
     private LaboratoryExamination changeState(LaboratoryExamStatus newState, LaboratoryExamStatus currentState,
                                                         Supplier<LaboratoryExamination> toEntity) {
         LaboratoryExamination laboratoryExamination = wrapToEntity(toEntity);

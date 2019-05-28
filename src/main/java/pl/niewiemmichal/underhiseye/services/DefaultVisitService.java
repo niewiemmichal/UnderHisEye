@@ -65,21 +65,39 @@ public class DefaultVisitService implements VisitService
 
     @Override
     public Visit get(@NonNull Long visitId) {
-        return visitRepository.findById(visitId).orElseThrow(() -> new ResourceDoesNotExistException("Visit", "id",
-                visitId.toString()));
+        return findVisit(visitId);
     }
 
     @Override
     public VisitWithExaminationsDto getFatVisit(@NonNull Long visitId) {
         Visit visit = findVisit(visitId);
 
-        return new VisitWithExaminationsDto(visit, examinationService.getAllLaboratoryExaminationsByVisit(visitId),
-                examinationService.getAllPhysicalExaminationsByVisit(visitId));
+        return new VisitWithExaminationsDto(visit, examinationService.getAllLaboratoryExaminationsByVisit(visit.getId()),
+                examinationService.getAllPhysicalExaminationsByVisit(visit.getId()));
     }
 
     @Override
     public List<Visit> getAll() {
         return visitRepository.findAll();
+    }
+
+    @Override
+    public List<VisitWithExaminationsDto> getAllFatVisits() {
+
+        return visitRepository.findAll().stream()
+                .map(visit -> new VisitWithExaminationsDto(visit,
+                        examinationService.getAllLaboratoryExaminationsByVisit(visit.getId()),
+                        examinationService.getAllPhysicalExaminationsByVisit(visit.getId())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<VisitWithExaminationsDto> getAllFatVisitsByDoctor(Long doctorId) {
+        return visitRepository.findAllByDoctor_Id(doctorId).stream()
+                .map(visit -> new VisitWithExaminationsDto(visit,
+                        examinationService.getAllLaboratoryExaminationsByVisit(visit.getId()),
+                        examinationService.getAllPhysicalExaminationsByVisit(visit.getId())))
+                .collect(Collectors.toList());
     }
 
     private Visit changeState(VisitStatus newState, Supplier<Visit> toEntity) {

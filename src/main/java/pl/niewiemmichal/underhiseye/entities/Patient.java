@@ -1,5 +1,6 @@
 package pl.niewiemmichal.underhiseye.entities;
 
+import io.swagger.annotations.ApiParam;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,12 +8,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Patient {
 
+    @ApiParam(hidden = true)
     @Id @GeneratedValue
     private Long id;
 

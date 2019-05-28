@@ -1,5 +1,7 @@
 package pl.niewiemmichal.underhiseye.web.endpoints;
 
+import java.util.List;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -8,13 +10,17 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.commons.dto.AssistantClosureDto;
 import pl.niewiemmichal.underhiseye.commons.dto.SupervisorClosureDto;
+import pl.niewiemmichal.underhiseye.commons.exceptions.BadRequestException;
+import pl.niewiemmichal.underhiseye.entities.LaboratoryExamStatus;
 import pl.niewiemmichal.underhiseye.entities.LaboratoryExamination;
 import pl.niewiemmichal.underhiseye.services.ExaminationService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
-@Api(tags = {"examinations"})
+import com.google.common.collect.Lists;
+
+@Api(tags = {"laboratory_examinations"})
 @RequestMapping (value = "examinations", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class ExaminationEndpoint {
@@ -24,6 +30,25 @@ public class ExaminationEndpoint {
     @Autowired
     public ExaminationEndpoint(ExaminationService examinationService) {
         this.examinationService = examinationService;
+    }
+
+    @ApiOperation(value = "Get all laboratory examinations")
+    @RolesAllowed({"ASSISTANT", "SUPERVISOR"})
+    @GetMapping
+    public List<LaboratoryExamination> getAllLaboratoryExaminations() {
+        return examinationService.getAllLaboratoryExaminations();
+    }
+
+    @ApiOperation(value = "Get all laboratory examinations by status")
+    @RolesAllowed({"ASSISTANT", "SUPERVISOR"})
+    @GetMapping("/{status}")
+    public List<LaboratoryExamination> getAllLaboratoryExaminationsByStatus(
+            @ApiParam(value = "Laboratory examination's status", required = true) @PathVariable String status) {
+        try {
+            return examinationService.getAllLaboratoryExaminationsByStatus(LaboratoryExamStatus.valueOf(status));
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("LaboratoryExamination", "status", status, "Illegal status value");
+        }
     }
 
     @ApiOperation(value = "Finish ordered laboratory examination")

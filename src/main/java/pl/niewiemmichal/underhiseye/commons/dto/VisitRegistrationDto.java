@@ -23,6 +23,4 @@ public class VisitRegistrationDto {
     private Long doctorId;
     @NotNull
     private Long registrantId;
-    @Valid
-    private Patient patient;
 }

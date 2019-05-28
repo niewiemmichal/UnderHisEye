@@ -4,6 +4,7 @@ import pl.niewiemmichal.underhiseye.commons.dto.AssistantClosureDto;
 import pl.niewiemmichal.underhiseye.commons.dto.LaboratoryExaminationDto;
 import pl.niewiemmichal.underhiseye.commons.dto.PhysicalExaminationDto;
 import pl.niewiemmichal.underhiseye.commons.dto.SupervisorClosureDto;
+import pl.niewiemmichal.underhiseye.entities.LaboratoryExamStatus;
 import pl.niewiemmichal.underhiseye.entities.LaboratoryExamination;
 import pl.niewiemmichal.underhiseye.entities.PhysicalExamination;
 
@@ -18,4 +19,6 @@ public interface ExaminationService {
     LaboratoryExamination approve(Long id, Long supervisorId);
     List<LaboratoryExamination> getAllLaboratoryExaminationsByVisit(Long visitId);
     List<PhysicalExamination> getAllPhysicalExaminationsByVisit(Long visitId);
+    List<LaboratoryExamination> getAllLaboratoryExaminations();
+    List<LaboratoryExamination> getAllLaboratoryExaminationsByStatus(LaboratoryExamStatus status);
 }

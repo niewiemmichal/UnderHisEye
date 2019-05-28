@@ -35,6 +35,20 @@ public class VisitEndpoint {
         return visitService.getAll();
     }
 
+    @ApiOperation("Get all visits with examinations")
+    @RolesAllowed({"DOCTOR"})
+    @GetMapping("/e/")
+    public List<VisitWithExaminationsDto> getAllFatVisits() {
+        return visitService.getAllFatVisits();
+    }
+
+    @ApiOperation("Get all visits with examinations by doctor's id")
+    @RolesAllowed({"DOCTOR"})
+    @GetMapping("/e/{id}")
+    public List<VisitWithExaminationsDto> getAllFatVisits(@ApiParam(value = "Doctor's id", required = true) @PathVariable Long id) {
+        return visitService.getAllFatVisitsByDoctor(id);
+    }
+
     @ApiOperation("Get visit's details")
     @RolesAllowed({"DOCTOR", "REGISTRANT"})
     @GetMapping("/{id}")

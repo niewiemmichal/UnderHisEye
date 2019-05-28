@@ -1,6 +1,7 @@
 package pl.niewiemmichal.underhiseye.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -9,6 +10,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.assertj.core.util.Lists;
 import org.junit.Before;
@@ -360,6 +362,42 @@ public class DefaultVisitServiceTest
         given(visitRepository.findAll()).willReturn(Lists.newArrayList());
         //when
         List<Visit> actual = visitService.getAll();
+        //then
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    public void shouldGetAllFatVisits() {
+        //given
+        List<Visit> visits = Lists.newArrayList(visit, visit);
+        List<LaboratoryExamination> laboratoryExaminations = Lists.newArrayList(
+                new LaboratoryExamination(LaboratoryExamStatus.CANCELED, new Examination("name", "code"), visit),
+                new LaboratoryExamination(LaboratoryExamStatus.CANCELED, new Examination("name", "code"), visit),
+                new LaboratoryExamination(LaboratoryExamStatus.CANCELED, new Examination("name", "code"), visit)
+        );
+        List<PhysicalExamination> physicalExaminations = Lists.newArrayList(
+                new PhysicalExamination("result", new Examination("name", "code"), visit),
+                new PhysicalExamination("result", new Examination("name", "code"), visit),
+                new PhysicalExamination("result", new Examination("name", "code"), visit)
+        );
+        given(visitRepository.findAll()).willReturn(visits);
+        given(examinationService.getAllLaboratoryExaminationsByVisit(any())).willReturn(laboratoryExaminations);
+        given(examinationService.getAllPhysicalExaminationsByVisit(any())).willReturn(physicalExaminations);
+        //when
+        List<VisitWithExaminationsDto> actual = visitService.getAllFatVisits();
+        //then
+        List<VisitWithExaminationsDto> expected = visits.stream()
+                .map(v -> new VisitWithExaminationsDto(v, laboratoryExaminations, physicalExaminations))
+                .collect(Collectors.toList());
+        assertThat(actual).containsExactlyElementsOf(expected);
+    }
+
+    @Test
+    public void shouldGetNoFatVisits() {
+        //given
+        given(visitRepository.findAll()).willReturn(Lists.newArrayList());
+        //when
+        List<VisitWithExaminationsDto> actual = visitService.getAllFatVisits();
         //then
         assertThat(actual).isEmpty();
     }

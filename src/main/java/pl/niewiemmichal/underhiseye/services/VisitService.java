@@ -14,4 +14,6 @@ public interface VisitService {
     Visit get(Long id);
     VisitWithExaminationsDto getFatVisit(Long id);
     List<Visit> getAll();
+    List<VisitWithExaminationsDto> getAllFatVisits();
+    List<VisitWithExaminationsDto> getAllFatVisitsByDoctor(Long doctorId);
 }
