@@ -1,6 +1,8 @@
 package pl.niewiemmichal.underhiseye.services;
 
 import lombok.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.niewiemmichal.underhiseye.commons.dto.AssistantClosureDto;
@@ -29,6 +31,8 @@ public class DefaultExaminationService implements ExaminationService {
     private final VisitRepository visitRepository;
     private final ExaminationMapper examinationMapper;
 
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultVisitService.class);
+
     @Autowired
     public DefaultExaminationService(ExaminationRepository examinationRepository,
                                      LaboratoryExaminationRepository laboratoryExaminationRepository,
@@ -48,6 +52,7 @@ public class DefaultExaminationService implements ExaminationService {
 
     @Override
     public List<PhysicalExamination> createPhysicalExaminations(@NonNull List<PhysicalExaminationDto> physicalExaminations) {
+        LOG.info("Creating {}", physicalExaminations);
         return physicalExaminationRepository.saveAll(physicalExaminations.stream()
                 .map(e -> wrapToEntity(() -> examinationMapper.toEntity(e)))
                 .collect(Collectors.toList()));
@@ -55,6 +60,7 @@ public class DefaultExaminationService implements ExaminationService {
 
     @Override
     public List<LaboratoryExamination> createLaboratoryExaminations(@NonNull List<LaboratoryExaminationDto> laboratoryExaminations) {
+        LOG.info("Creating {}", laboratoryExaminations);
         return laboratoryExaminationRepository.saveAll(laboratoryExaminations.stream()
                 .map(e -> wrapToEntity(() -> examinationMapper.toEntity(e)))
                 .collect(Collectors.toList()));
@@ -62,24 +68,28 @@ public class DefaultExaminationService implements ExaminationService {
 
     @Override
     public LaboratoryExamination finish(@NonNull Long id, @NonNull AssistantClosureDto assistantClosureDto) {
+        LOG.info("Finishing examination with id={}", id);
         return changeState(LaboratoryExamStatus.FINISHED, LaboratoryExamStatus.ORDERED,
                 () -> examinationMapper.toEntity(assistantClosureDto, findExamination(id)));
     }
 
     @Override
     public LaboratoryExamination cancel(@NonNull Long id, @NonNull AssistantClosureDto assistantClosureDto) {
+        LOG.info("Canceling examination with id={}", id);
         return changeState(LaboratoryExamStatus.CANCELED, LaboratoryExamStatus.ORDERED,
                 () -> examinationMapper.toEntity(assistantClosureDto, findExamination(id)));
     }
 
     @Override
     public LaboratoryExamination reject(@NonNull Long id, @NonNull SupervisorClosureDto supervisorClosureDto) {
+        LOG.info("Rejecting examination with id={}", id);
         return changeState(LaboratoryExamStatus.REJECTED, LaboratoryExamStatus.FINISHED,
                 () -> examinationMapper.toEntity(supervisorClosureDto, findExamination(id)));
     }
 
     @Override
-    public LaboratoryExamination approve(@NonNull Long id,@NonNull Long supervisorId) {
+    public LaboratoryExamination approve(@NonNull Long id, @NonNull Long supervisorId) {
+        LOG.info("Approving examination with id={}", id);
         return changeState(LaboratoryExamStatus.APPROVED, LaboratoryExamStatus.FINISHED,
                 () -> examinationMapper.toEntity(supervisorId, findExamination(id)));
     }
@@ -111,10 +121,13 @@ public class DefaultExaminationService implements ExaminationService {
         LaboratoryExamination laboratoryExamination = wrapToEntity(toEntity);
 
         if(laboratoryExamination.getStatus() != newState) {
-            if(laboratoryExamination.getStatus() != currentState)
+            if(laboratoryExamination.getStatus() != currentState) {
+                LOG.info("Cannot change examination state from {} to {}", currentState, newState);
                 throw new BadRequestException("LaboratoryExamination", "status",
                         laboratoryExamination.getStatus().toString(), "should equal " + currentState.toString());
+            }
             laboratoryExamination.setStatus(newState);
+            LOG.info("Saving {}", laboratoryExamination);
             laboratoryExaminationRepository.save(laboratoryExamination);
         }
 

@@ -1,6 +1,8 @@
 package pl.niewiemmichal.underhiseye.services;
 
 import lombok.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ public class DefaultVisitService implements VisitService
     private final ExaminationService examinationService;
     private final VisitMapper visitMapper;
 
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultVisitService.class);
+
     @Autowired
     public DefaultVisitService(final ExaminationService examinationService, final VisitRepository visitRepository,
                                final VisitMapper visitMapper) {
@@ -36,6 +40,7 @@ public class DefaultVisitService implements VisitService
 
     @Override
     public void cancel(@NonNull Long visitId, @NonNull String reason) {
+        LOG.info("Canceling visit with id={}", visitId);
         Visit visit = findVisit(visitId);
         visit.setDescription(reason);
         changeState(VisitStatus.CANCELED, () -> visit);
@@ -43,15 +48,21 @@ public class DefaultVisitService implements VisitService
 
     @Override
     public Visit register(@NonNull VisitRegistrationDto visitRegistration) {
-        if(visitRegistration.getDate().isBefore(LocalDate.now()))
+        LOG.info("Registering {}", visitRegistration);
+        if(visitRegistration.getDate().isBefore(LocalDate.now())) {
+            LOG.info("Cannot register visit for date={}", visitRegistration.getDate());
             throw new BadRequestException("Visit", "Date", visitRegistration.getDate().toString(),
                     "date can't be from the past");
+        }
 
-        return visitRepository.save(wrapToEntity(() -> visitMapper.toEntity(visitRegistration)));
+        Visit visit = wrapToEntity(() -> visitMapper.toEntity(visitRegistration));
+        LOG.info("Saving {}", visit);
+        return visitRepository.save(visit);
     }
 
     @Override
     public void end(@NonNull Long visitId, @NonNull VisitClosureDto visitClosure) {
+        LOG.info("Ending visit with id={}", visitId);
         Visit visit = findVisit(visitId);
         changeState(VisitStatus.FINISHED, () -> visitMapper.toEntity(visitClosure, visit));
 
@@ -104,10 +115,13 @@ public class DefaultVisitService implements VisitService
         Visit visit = wrapToEntity(toEntity);
 
         if(visit.getStatus() != newState) {
-            if(visit.getStatus() != VisitStatus.REGISTERED)
+            if(visit.getStatus() != VisitStatus.REGISTERED) {
+                LOG.error("Cannot change state from {} to {}", visit.getStatus(), newState);
                 throw new BadRequestException("Visit", "status", visit.getStatus().toString(),
                         "should equal " + VisitStatus.REGISTERED.toString());
+            }
             visit.setStatus(newState);
+            LOG.info("Saving {}", visit);
             visitRepository.save(visit);
         }
 

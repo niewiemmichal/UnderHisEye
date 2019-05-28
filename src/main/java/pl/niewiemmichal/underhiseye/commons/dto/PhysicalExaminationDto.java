@@ -6,6 +6,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@ToString
 public class PhysicalExaminationDto {
     @NonNull
     private String result;

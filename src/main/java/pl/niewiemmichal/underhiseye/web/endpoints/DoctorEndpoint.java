@@ -29,7 +29,7 @@ public class DoctorEndpoint {
     }
 
     @ApiOperation(value = "Get doctor's details by id")
-    @RolesAllowed({"DOCTOR", "ADMINISTRATOR"})
+    @RolesAllowed({"DOCTOR", "REGISTRANT", "ADMINISTRATOR"})
     @GetMapping(value = "/{id}")
     public Doctor getDoctor(@ApiParam(value = "Doctor's id", required = true) @PathVariable Long id){
         return doctorRepository.findById(id)
@@ -37,7 +37,7 @@ public class DoctorEndpoint {
     }
 
     @ApiOperation(value = "Get doctor's details by its user's username")
-    @RolesAllowed({"DOCTOR", "ADMINISTRATOR"})
+    @RolesAllowed({"DOCTOR", "REGISTRANT", "ADMINISTRATOR"})
     @GetMapping(value = "/u/{username}")
     public Doctor getDoctor(@ApiParam(value = "Doctor's username", required = true) @PathVariable String username){
         return doctorRepository.findByUser_Username(username)
@@ -45,7 +45,7 @@ public class DoctorEndpoint {
     }
 
     @ApiOperation(value = "Get all doctors")
-    @RolesAllowed({"ADMINISTRATOR"})
+    @RolesAllowed({"ADMINISTRATOR", "REGISTRANT"})
     @GetMapping
     public List<Doctor> getAllDoctors(){
         return  doctorRepository.findAll();

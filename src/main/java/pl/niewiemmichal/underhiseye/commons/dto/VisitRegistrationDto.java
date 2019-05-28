@@ -3,6 +3,7 @@ package pl.niewiemmichal.underhiseye.commons.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import pl.niewiemmichal.underhiseye.entities.Patient;
 import pl.niewiemmichal.underhiseye.entities.VisitStatus;
 
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class VisitRegistrationDto {
 
     @NotNull
