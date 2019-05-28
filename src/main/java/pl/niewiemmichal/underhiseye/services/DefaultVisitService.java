@@ -16,7 +16,7 @@ import pl.niewiemmichal.underhiseye.commons.dto.VisitWithExaminationsDto;
 import pl.niewiemmichal.underhiseye.entities.Visit;
 import pl.niewiemmichal.underhiseye.repositories.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -49,7 +49,7 @@ public class DefaultVisitService implements VisitService
     @Override
     public Visit register(@NonNull VisitRegistrationDto visitRegistration) {
         logger.info("Registering {}", visitRegistration);
-        if(visitRegistration.getDate().isBefore(LocalDate.now())) {
+        if(visitRegistration.getDate().isBefore(LocalDateTime.now())) {
             logger.info("Cannot register visit for date={}", visitRegistration.getDate());
             throw new BadRequestException("Visit", "Date", visitRegistration.getDate().toString(),
                     "date can't be from the past");

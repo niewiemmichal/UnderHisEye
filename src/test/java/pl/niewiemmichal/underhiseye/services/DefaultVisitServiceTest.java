@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,7 +59,7 @@ public class DefaultVisitServiceTest
     private Registrant registrant =  new Registrant("Existing", "Registrator");
 
     private Visit visit = new Visit(VisitStatus.REGISTERED,
-            LocalDate.of(2019, 12, 20), patient, registrant, doctor);
+            LocalDateTime.of(2019, 12, 20, 14, 40), patient, registrant, doctor);
 
 
     private VisitRegistrationDto visitRegistrationDto = new VisitRegistrationDto();
@@ -151,8 +152,8 @@ public class DefaultVisitServiceTest
     @Test(expected = BadRequestException.class)
     public void shouldNotCreateVisitIfPastDate() {
         //given
-        visit.setDate(LocalDate.of(1997, 9, 25));
-        visitRegistrationDto.setDate(LocalDate.of(1997, 9, 25));
+        visit.setDate(LocalDateTime.of(1997, 9, 25, 15, 50));
+        visitRegistrationDto.setDate(LocalDateTime.of(1997, 9, 25, 15, 50));
 
         //when
         visitService.register(visitRegistrationDto);
@@ -344,9 +345,9 @@ public class DefaultVisitServiceTest
     public void shouldGetAllVisits() {
         //given
         List<Visit> visits = Lists.newArrayList(
-                new Visit(VisitStatus.REGISTERED, LocalDate.now(), patient, registrant, doctor),
-                new Visit(VisitStatus.CANCELED, LocalDate.now(), patient, registrant, doctor),
-                new Visit(VisitStatus.FINISHED, LocalDate.now(), patient, registrant, doctor)
+                new Visit(VisitStatus.REGISTERED, LocalDateTime.now(), patient, registrant, doctor),
+                new Visit(VisitStatus.CANCELED, LocalDateTime.now(), patient, registrant, doctor),
+                new Visit(VisitStatus.FINISHED, LocalDateTime.now(), patient, registrant, doctor)
         );
         given(visitRepository.findAll()).willReturn(visits);
         //when

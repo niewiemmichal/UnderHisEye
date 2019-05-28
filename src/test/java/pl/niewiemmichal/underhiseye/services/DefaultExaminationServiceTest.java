@@ -17,6 +17,7 @@ import pl.niewiemmichal.underhiseye.entities.*;
 import pl.niewiemmichal.underhiseye.repositories.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +67,7 @@ public class DefaultExaminationServiceTest {
     private Registrant registrant = new Registrant("Existing", "Registrant");
 
     private Visit visit = new Visit(VisitStatus.REGISTERED,
-            LocalDate.of(2019, 12, 20), patient, registrant, doctor);
+            LocalDateTime.of(2019, 12, 20, 14, 40), patient, registrant, doctor);
 
     private LaboratoryExamination laboratoryExamination = new LaboratoryExamination(LaboratoryExamStatus.ORDERED,
             examination, visit);

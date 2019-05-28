@@ -10,6 +10,7 @@ import pl.niewiemmichal.underhiseye.entities.VisitStatus;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 public class VisitRegistrationDto {
 
     @NotNull
-    private LocalDate date;
+    private LocalDateTime date;
     @NotNull
     private Long patientId;
     @NotNull

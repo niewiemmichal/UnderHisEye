@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -31,11 +32,11 @@ public class Visit {
     private VisitStatus status;
 
     @Column(nullable = false)
-    private LocalDate registrationDate;
+    private LocalDateTime registrationDate;
 
     @NonNull
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Valid
     @NonNull
@@ -57,7 +58,7 @@ public class Visit {
 
     @PrePersist
     private void setDate() {
-        registrationDate = LocalDate.now();
+        registrationDate = LocalDateTime.now();
     }
 
 }
