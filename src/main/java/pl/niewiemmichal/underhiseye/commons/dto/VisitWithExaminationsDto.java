@@ -9,6 +9,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Getter
+@EqualsAndHashCode
 public class VisitWithExaminationsDto {
     @NonNull
     private final Visit visit;

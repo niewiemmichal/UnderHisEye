@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 import org.assertj.core.util.Lists;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -389,6 +388,7 @@ public class DefaultVisitServiceTest
         List<VisitWithExaminationsDto> expected = visits.stream()
                 .map(v -> new VisitWithExaminationsDto(v, laboratoryExaminations, physicalExaminations))
                 .collect(Collectors.toList());
+
         assertThat(actual).containsExactlyElementsOf(expected);
     }
 
