@@ -17,8 +17,6 @@ public class Examination {
     @Id
     @NonNull
     @NotEmpty
-    @Column(length = 6)
-    @Size(min = 6, max = 6)
     private String code;
 
     @NonNull
