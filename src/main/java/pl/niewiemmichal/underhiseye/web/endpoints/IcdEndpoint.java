@@ -29,7 +29,7 @@ public class IcdEndpoint {
     }
 
     @ApiOperation("Get medical procedure details by ICD-9 code")
-    @RolesAllowed({"ADMINISTRATOR"})
+    @RolesAllowed({"ADMINISTRATOR", "DOCTOR"})
     @GetMapping("{code}")
     public Examination getExamination(@ApiParam(value = "ICD-9 code", required = true) @PathVariable String code) {
         return examinationRepository.findById(code).orElseThrow(()
@@ -37,7 +37,7 @@ public class IcdEndpoint {
     }
 
     @ApiOperation("Get all ICD-9 medical procedures")
-    @RolesAllowed({"ADMINISTRATOR"})
+    @RolesAllowed({"ADMINISTRATOR", "DOCTOR"})
     @GetMapping
     public List<Examination> getAllExaminations() {
         return examinationRepository.findAll();
