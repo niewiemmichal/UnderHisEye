@@ -44,7 +44,7 @@ public class IcdEndpoint {
     @ApiOperation("Add and ICD-9 medical procedure to the database")
     @RolesAllowed({"ADMINISTRATOR", "DOCTOR", "REGISTRANT", "ASSISTANT"})
     @PostMapping
-    public void addExamination(@Valid @RequestBody Examination examination) {
+    public Examination addExamination(@Valid @RequestBody Examination examination) {
         examinationRepository.save(examination);
     }
 }
