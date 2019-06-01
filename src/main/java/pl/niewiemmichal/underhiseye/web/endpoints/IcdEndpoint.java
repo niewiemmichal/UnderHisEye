@@ -5,15 +5,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.niewiemmichal.underhiseye.commons.exceptions.ResourceDoesNotExistException;
 import pl.niewiemmichal.underhiseye.entities.Examination;
 import pl.niewiemmichal.underhiseye.repositories.ExaminationRepository;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 import java.util.List;
 
 @Api(tags = {"icd"})
@@ -41,5 +39,12 @@ public class IcdEndpoint {
     @GetMapping
     public List<Examination> getAllExaminations() {
         return examinationRepository.findAll();
+    }
+
+    @ApiOperation("Add and ICD-9 medical procedure to the database")
+    @RolesAllowed({"ADMINISTRATOR", "DOCTOR", "REGISTRANT", "ASSISTANT"})
+    @PostMapping
+    public void addExamination(@Valid @RequestBody Examination examination) {
+        examinationRepository.save(examination);
     }
 }
