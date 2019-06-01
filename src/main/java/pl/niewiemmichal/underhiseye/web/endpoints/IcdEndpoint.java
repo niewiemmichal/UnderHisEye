@@ -45,6 +45,6 @@ public class IcdEndpoint {
     @RolesAllowed({"ADMINISTRATOR", "DOCTOR", "REGISTRANT", "ASSISTANT"})
     @PostMapping
     public Examination addExamination(@Valid @RequestBody Examination examination) {
-        examinationRepository.save(examination);
+        return examinationRepository.save(examination);
     }
 }
