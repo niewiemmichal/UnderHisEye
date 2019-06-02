@@ -31,7 +31,6 @@ public class PhysicalExamination {
     @ManyToOne
     private Examination examination;
 
-    @JsonIgnore
     @Valid
     @NonNull
     @JoinColumn(nullable = false)
