@@ -56,7 +56,6 @@ public class LaboratoryExamination {
     @ManyToOne
     private LaboratoryAssistant assistant;
 
-    @JsonIgnore
     @NonNull
     @JoinColumn(nullable = false)
     @ManyToOne
