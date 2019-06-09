@@ -5,8 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 @Data
@@ -58,7 +58,7 @@ public class Visit {
 
     @PrePersist
     private void setDate() {
-        registrationDate = LocalDateTime.now();
+        registrationDate = LocalDateTime.now(ZoneId.of("Europe/Warsaw"));
     }
 
 }
