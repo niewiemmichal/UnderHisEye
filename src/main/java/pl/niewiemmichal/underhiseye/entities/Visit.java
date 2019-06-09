@@ -58,7 +58,7 @@ public class Visit {
 
     @PrePersist
     private void setDate() {
-        registrationDate = LocalDateTime.now(ZoneId.of("Europe/Warsaw"));
+        registrationDate = LocalDateTime.now();
     }
 
 }
